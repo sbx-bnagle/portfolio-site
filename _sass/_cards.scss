@@ -1,0 +1,145 @@
+// =========================================================
+// Sticky stacked case-study cards (homepage)
+// =========================================================
+
+.cards { padding-bottom: var(--s-6); }
+
+.card {
+  position: sticky;
+  top: calc(var(--nav-h) + (var(--i) * 1.25rem));
+  background: var(--paper);
+  border: 1px solid var(--line);
+  margin-inline: auto;
+  width: min(100% - 2 * var(--wrap-pad), var(--wrap));
+  min-height: 0;                  // mobile: natural height
+  margin-bottom: var(--s-4);
+  box-shadow: 0 -1px 0 var(--line), 0 -24px 40px -32px rgba(0, 0, 0, 0.18);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+
+  display: grid;
+  grid-template-columns: 1fr;     // mobile: image over body
+  grid-template-rows: 16rem 1fr;
+
+  &:hover .card-cta,
+  &:hover .card-title { text-decoration: underline; }
+
+  // The ring goes round the whole card, which the link covers.
+  &:has(.card-link:focus-visible) {
+    outline: 2px solid var(--ink);
+    outline-offset: -3px;
+  }
+
+  @include respondto('md') {
+    grid-template-columns: 1.1fr 1fr;   // desktop: image beside body
+    grid-template-rows: none;
+  }
+
+  // Phones: a plain list rather than a stack. Each case study is its image
+  // with the text beneath, flush with the page margins; no sticky, frame or
+  // shadow, and the ring sits just outside the item.
+  @include below('sm') {
+    position: relative;             // not sticky, but still the box the stretched link covers
+    top: auto;                      // the sticky offset would shift a relative box down
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+    grid-template-rows: auto;       // the image at its own height, the text under it
+    margin-bottom: var(--s-5);
+
+    &:has(.card-link:focus-visible) { outline-offset: 4px; }
+  }
+
+  // @include respondto('md') {
+  //   min-height: 78vh;             // desktop: tall enough to feel the stack
+  // }
+}
+
+// Only the title is the link; its ::after stretches over the card (positioned
+// by .card's sticky), so a click anywhere on it still opens the case study.
+.card-link {
+  text-decoration: none;
+  color: inherit;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  &:focus-visible { outline: none; }
+}
+
+.card-media {
+  --aspect: 16 / 9;
+  background: var(--ph-bg);
+  // border-bottom: 1px dashed var(--ph-line);   // mobile: divider below image
+  display: grid;
+  place-items: center;
+  position: relative;              // anchors a video card's pause button
+  order: -1;                       // drawn first, though it follows the text in the markup
+
+  // Above the stretched link, and shown whenever the card is hovered.
+  .video-toggle { z-index: 2; }
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover & .video-toggle { opacity: 1; }
+  }
+
+  @include respondto('md') {
+    border-bottom: 0;
+    // border-right: 1px dashed var(--ph-line);  // desktop: divider beside image
+  }
+}
+
+.card-body {
+  padding: var(--s-5);
+  display: grid;
+  gap: var(--s-3);
+  align-content: center;
+
+  @include below('sm') { padding: var(--s-4) 0 0; }
+}
+
+.card-meta {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: baseline;
+  gap: var(--s-3);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2-small);
+}
+
+.card-num { font-weight: 700; color: var(--ink); }
+.card-title { font-size: var(--fs-xl); }
+.card-blurb { max-width: var(--measure); color: var(--ink); margin: 0; }
+
+// Stays flex: role and CTA share a row when they fit and wrap when they don't,
+// which depends on the text width. Grid can only switch at a breakpoint.
+.card-foot {
+  margin-top: var(--s-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  align-items: center;
+  @include text-caption;
+  color: var(--ink-2-small);
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-3);
+}
+
+.card-status.is-live::before {
+  content: "● ";
+  color: var(--live);
+  font-size: 0.7em;
+}
+
+.card-cta {
+  margin-left: auto;
+  color: var(--ink);
+  font-weight: 500;
+}

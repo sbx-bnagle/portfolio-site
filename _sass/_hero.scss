@@ -1,0 +1,20 @@
+// =========================================================
+// Hero
+// =========================================================
+
+.hero {
+  @include grid;
+  padding-block: var(--s-7) var(--s-6);
+}
+
+.hero-intro {
+  grid-column: 1 / -1;            
+  font-size: var(--fs-display);
+  font-weight: 400;
+  line-height: var(--lh-tight);
+  letter-spacing: .0075em;
+
+  @include respondto('md') {
+    grid-column: 1 / 8;           
+  }
+}

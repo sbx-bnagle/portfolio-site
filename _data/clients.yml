@@ -1,0 +1,19 @@
+# Client list for the homepage logo grid.
+# `logo` is optional — when blank, the grid renders the name as a text chip
+# (honest placeholder until you have clean, brand-compliant logo files).
+- name: "University of Chicago"
+  logo: "/assets/img/uchicago.png"
+- name: "Argonne National Laboratory"
+  logo: "/assets/img/argonne.png"
+- name: "Fermilab"
+  logo: "/assets/img/fermi.png"
+- name: "NANOGrav"
+  logo: "/assets/img/nano.png"
+- name: "Sanford Underground Research Facility"
+  logo: "/assets/img/sanford.png"
+- name: "Department of Energy"
+  logo: "/assets/img/doe.png"
+- name: "Rice University"
+  logo: "/assets/img/rice.png"
+- name: "Symmetry Magazine"
+  logo: "/assets/img/symmetry.png"

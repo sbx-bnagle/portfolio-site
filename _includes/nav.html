@@ -1,0 +1,24 @@
+{%- comment -%}
+Active section: case studies live under /work/, so the home link owns them.
+Notes covers both /notes/ and individual notes. The 404 page belongs to none.
+{%- endcomment -%}
+{%- assign nav_url = page.url | default: '/' -%}
+{%- if nav_url contains '/about' -%}
+  {%- assign nav_section = 'about' -%}
+{%- elsif nav_url contains '/notes' -%}
+  {%- assign nav_section = 'notes' -%}
+{%- elsif nav_url == '/404.html' -%}
+  {%- assign nav_section = 'none' -%}
+{%- else -%}
+  {%- assign nav_section = 'work' -%}
+{%- endif -%}
+<header class="site-head">
+  <nav class="nav wrap" aria-label="Primary">
+    <a class="wordmark" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+    <ul class="nav-links">
+      <li><a href="{{ '/' | relative_url }}"{% if nav_section == 'work' %} class="is-active"{% endif %}{% if nav_url == '/' %} aria-current="page"{% endif %}>Work</a></li>
+      <li><a href="{{ '/about/' | relative_url }}"{% if nav_section == 'about' %} class="is-active" aria-current="page"{% endif %}>About</a></li>
+      <li><a href="{{ '/notes/' | relative_url }}"{% if nav_section == 'notes' %} class="is-active"{% endif %}{% if nav_url == '/notes/' %} aria-current="page"{% endif %}>Notes</a></li>
+    </ul>
+  </nav>
+</header>

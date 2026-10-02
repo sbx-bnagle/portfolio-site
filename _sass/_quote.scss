@@ -1,0 +1,26 @@
+// =========================================================
+// Content block: client quote
+// =========================================================
+
+.pullquote {
+  margin: var(--s-6) auto;
+  max-width: var(--measure);
+  padding: 0 0 0 var(--s-4);
+  border-left: 2px solid var(--ink);
+}
+
+.pullquote-text {
+  font-size: var(--fs-md);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+  margin: 0;
+}
+
+.pullquote-cite {
+  margin-top: var(--s-3);
+  font-size: var(--fs-sm);
+  color: var(--ink-2-small);
+  display: grid;
+}
+
+.pullquote-name { font-weight: 500; color: var(--ink); }

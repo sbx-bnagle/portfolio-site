@@ -1,0 +1,105 @@
+// =========================================================
+// Notes (index + single note)
+// =========================================================
+
+// The same top padding as a case study header, so the title sits at the same
+// height; no bottom padding, as the list ends on the footer's rule.
+.notes-index { padding-block: var(--s-7) 0; }
+
+// From the subtitle to the list, the same room as from a case study subtitle
+// to its hero (with the Year/Role/Status row between): 96px.
+.notes-intro { margin-bottom: 6rem; }
+
+// The case study subtitle style, in ink rather than grey.
+// The 404 page's illustration, under its intro.
+.notfound-art {
+  max-width: 48rem;
+  margin: calc(-6rem + var(--s-5)) 0 var(--s-7);  // closer to the text than the notes list sits
+}
+
+.notes-sub {
+  @include subtitle;
+  color: var(--ink);
+  margin: var(--s-3) 0 0;
+}
+
+.notes-lede {
+  @include page-title;           // the case study title's size
+  margin-bottom: var(--s-3);
+}
+
+.notes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li { border-top: 1px solid var(--ink); }
+
+  a {
+    display: block;
+    padding-block: var(--s-4);
+    text-decoration: none;
+    font-size: var(--fs-md);
+    font-weight: 500;
+
+    // Underline rather than grey: grey fell to about 2:1 on the Notes colour.
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+  }
+}
+
+.note {
+  padding-block: var(--s-6) var(--s-7);
+  max-width: var(--measure);
+}
+
+.note-title {
+  font-size: var(--fs-xl);
+  margin-bottom: var(--s-5);
+}
+
+.note-body p { margin: 0 0 var(--s-4); }
+
+// Full-width media breaks out of the note's measure by one grid column on
+// each side. The bleed shrinks to whatever room is actually left beside the
+// column, so narrow viewports fall back to the text width instead of
+// overflowing.
+// Shared by every full-width block in a note. The bleed shrinks to whatever
+// room is actually left beside the column, so narrow viewports fall back to
+// the text width instead of overflowing. Declared on the parent so the
+// percentage resolves against the same containing block for each child.
+.note-body {
+  --bleed: max(0px, min(var(--col), (100vw - 100%) / 2 - var(--wrap-pad)));
+}
+
+.note .media-full,
+.note .media-duo,
+.note-body > iframe {
+  width: calc(100% + 2 * var(--bleed));
+  margin-inline: calc(-1 * var(--bleed));
+}
+
+// The pair spans one full frame between them, split by half a grid gutter as
+// in the case studies. The bleed on either side stays as it is.
+.note .media-duo { gap: var(--media-gap); }
+
+// Pasted embeds arrive with fixed width/height attributes; make them fluid.
+.note-body > iframe {
+  display: block;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  margin-block: var(--s-5);
+}
+
+.note .media figcaption { color: var(--ink); }
+
+.note-back {
+  margin-top: var(--s-6);
+  font-size: var(--fs-base);      // matches body text
+  line-height: var(--lh-body);
+
+  a { color: var(--ink); text-decoration: none; }
+}

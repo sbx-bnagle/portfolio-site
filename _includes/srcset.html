@@ -1,0 +1,5 @@
+{%- comment -%}
+  A srcset list for one format of a _data/responsive.json entry.
+  Params: r (the entry), fmt ("avif" or "webp").
+{%- endcomment -%}
+{%- for w in include.r.w -%}{{ site.baseurl }}{{ include.r.stem }}-{{ w }}.{{ include.fmt }} {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}

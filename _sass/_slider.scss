@@ -1,0 +1,142 @@
+// =========================================================
+// Horizontal slider (_includes/slider.html)
+// A native scrolling rail: the trackpad, a swipe and the arrow keys all work
+// on their own, and assets/js/slider.js drives the arrow buttons and hides
+// them when everything already fits. Nothing moves on its own, so there is no
+// auto-motion to pause.
+// =========================================================
+
+.slider {
+  position: relative;
+  margin-block: var(--s-5);
+}
+
+.slider-rail {
+  display: flex;
+  gap: var(--grid-gap);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;   // a swipe past the end doesn't leave the page
+  scrollbar-width: none;            // the buttons and the swipe do the work
+  padding-block: 2px;               // room for a focus ring on a card
+
+  // The rail runs the full width of the window while the first slide still
+  // starts on the grid. The padding scrolls with the content, so slides pass
+  // behind it and are cropped by the window edge rather than the grid edge.
+  padding-left: var(--slider-inset, 0);
+  scroll-padding-left: var(--slider-inset, 0);   // tabbing to a card lands it on the grid
+
+  // A swipe or trackpad scroll settles with a slide on the grid line, as the
+  // buttons and a mouse drag do (slider.js turns it off while a drag is held).
+  scroll-snap-type: x mandatory;
+
+  // Trailing room so the last slide can still travel to the grid line instead
+  // of stopping as soon as it meets the window edge. It scrolls with the
+  // content, so it costs nothing at rest.
+  padding-right: max(
+    var(--slider-inset, 0px),
+    calc(100% - var(--slider-inset, 0px) - var(--slide-w, min(24rem, 78vw)))
+  );
+
+  &::-webkit-scrollbar { display: none; }
+
+  &:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) { scroll-behavior: auto; }
+
+  // A mouse can drag the rail when there's somewhere to go (slider.js).
+  @media (pointer: fine) {
+    .is-draggable > & { cursor: grab; }
+  }
+  &.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+    user-select: none;
+  }
+  &.is-dragging,
+  &.is-settling { scroll-snap-type: none; }
+}
+
+.slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: var(--slide-w, min(24rem, 78vw));
+
+  // Cards and figures carry their own margins and measure caps. In the rail the
+  // slide sets the width and the gap sets the spacing, so clear both: an inline
+  // `auto` margin would otherwise inset the card and read as a wider gutter.
+  > * {
+    margin: 0;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+.slide-media {
+  margin: 0;
+
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  // The caption takes the shared caption style (_media.scss).
+}
+
+.slider-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+
+  &:not(:has(button:not([hidden]))) { display: none; }
+}
+
+// From md the arrows hang beside the paragraph introducing the slider, level
+// with its top line; slider.js sets `top` from that paragraph. The box spans
+// the row so the column padding still places the arrows, but only the buttons
+// take clicks, leaving the paragraph's text selectable underneath.
+.slider.has-hung-nav > .slider-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: 0;
+  pointer-events: none;
+
+  .slider-btn { pointer-events: auto; }
+}
+
+// The same arrow as the "View case study" links, on a soft neutral tile.
+.slider-btn {
+  display: grid;
+  place-items: center;
+  width: 5rem;                    // 2:1 against the height
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: var(--ph-bg);
+  color: var(--ink);
+  cursor: pointer;
+
+  &[hidden] { display: none; }
+
+  .slider-arrow {
+    font-size: var(--fs-sm);      // matches the icon it replaces
+    line-height: var(--lh-none);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    // Arrow colour, faded by the same opacity, so the outline matches it exactly.
+    border: 0.5px solid currentColor;
+  }
+
+  &:not(:disabled):hover { background: var(--ph-line); }
+}

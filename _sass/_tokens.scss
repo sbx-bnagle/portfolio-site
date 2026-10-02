@@ -1,0 +1,98 @@
+// =========================================================
+// Design tokens (CSS custom properties)
+// Breakpoints live in _breakpoints.scss as Sass variables,
+// since media queries can't read custom properties.
+// =========================================================
+
+:root {
+  // Wireframe palette: monochrome + hairlines. Add real color later.
+  --paper:    #ffffff;
+  --paper-2:  #faf9f7;
+  --ink:      #1a1a1a;
+  --ink-2:    #8D8D8B; //prev #6f6f6c
+  // Small grey text needs more contrast than --ink-2 gives on the light pages
+  // (3.2:1). This is 4.8:1 on the page and 5.0:1 on white. Large text, the
+  // section rules and dark backgrounds keep --ink-2 (see .page-about).
+  --ink-2-small: #6f6f6c;
+  --line:     #e4e3df;
+  --ph-bg:    #f1f0ec;
+  --ph-line:  #c9c8c2;
+  --ph-text:  #9a9a94;
+  --live:     #22c55e; // status dot: live
+  --retired:  #ef4444; // status dot: retired / archived
+
+  // Type
+  --font: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  // Type scale: every font size on the site is one of these (the Fusion map
+  // keeps the source map's own type). Above --fs-base the steps grow with the
+  // window, from the phone size to the desktop one.
+  --fs-xs:      0.8125rem;                              // 13px: captions, meta, small print
+  --fs-sm:      0.875rem;                               // 14px: nav, labels and other interface text
+  --fs-base:    1.09375rem;                             // 17.5px: body text
+  --fs-md:      clamp(1.25rem, 1rem + 0.6vw, 1.5rem);   // 20–24px: section headings, list titles
+  // 24px at the least: the grey case study subtitles pass contrast only as
+  // large text (3:1 from 24px).
+  --fs-lg:      clamp(1.5rem, 1rem + 1.2vw, 1.75rem);   // 24–28px: subtitles, the About intro
+  --fs-xl:      clamp(1.75rem, 1rem + 2vw, 2.5rem);     // 28–40px: card and note titles
+  --fs-2xl:     clamp(2rem, 1rem + 4vw, 3.5rem);        // 32–56px: page titles
+  --fs-display: clamp(1.5rem, 1rem + 3vw, 5rem);        // the home page statement
+  --fs-stat:    clamp(4.375rem, 1.735rem + 11.27vw, 13rem); // stat figures; 13rem from 1600px
+
+  // Line heights
+  --lh-none:  1;       // one-line figures and buttons
+  --lh-tight: 1.15;    // headings, titles, short stacked lines
+  --lh-snug:  1.25;    // large text over several lines
+  --lh-body:  1.4;     // body text
+  --lh-loose: 1.6;     // small text: captions, meta
+
+  // Spacing scale
+  // --s-1: 0.5rem;    //   8px
+  // --s-2: 0.75rem;   //  12px
+  // --s-3: 1rem;      //  16px
+  // --s-4: 1.5rem;    //  24px
+  // --s-5: 2.5rem;    //  40px
+  // --s-6: 6rem;      //  96px
+  // --s-7: 8rem;      // 128px
+
+  --s-1: 0.4375rem;    //   7px
+  --s-2: 0.875rem;     //  14px
+  --s-3: 1rem;         //  16px
+  --s-4: 1.3125rem;    //  21px
+  --s-5: 2.625rem;     //  42px
+  --s-6: 6.125rem;     //  98px
+  --s-7: 8.3125rem;    // 133px
+
+  // Shape
+  --radius-card: 16px;            // home page cards; also the capped case hero
+
+  // Layout
+  --nav-h: 3rem;
+  --wrap: min(90vw, 90rem);        // 1440px cap: layout stops growing at a 1600px window, with the case hero
+  --measure: 38rem;
+  // The page's side padding inside .wrap. Anything that sizes itself against
+  // the wrap's content box takes this off, not a spacing step.
+  --wrap-pad: var(--s-4);
+
+  // 8-column grid
+  --grid-gap: clamp(1rem, 2vw, 2rem); // 2vw reaches 2rem at 1600px, so the gutter stops there too
+  // Half a gutter: between media items, and between media and the window edge.
+  --media-gap: calc(var(--grid-gap) / 2);
+
+  // Width of one grid column, for blocks that need to bleed past a text
+  // measure by a whole column (see .note .media-full).
+  --col: calc((var(--wrap) - 7 * var(--grid-gap)) / 8);
+}
+
+// Phones: the layout runs almost to the window edge (10px a side, down from
+// about 40px), and the two largest vertical spaces each drop a step: --s-7
+// takes --s-6's value and --s-6 takes --s-5's. Literal values, as a var()
+// here would chain (--s-7 would follow --s-6 down to --s-5).
+@include below('sm') {
+  :root {
+    --wrap: 100vw;
+    --wrap-pad: 0.625rem;          // 10px
+    --s-7: 6.125rem;               // 98px, as --s-6
+    --s-6: 2.625rem;               // 42px, as --s-5
+  }
+}

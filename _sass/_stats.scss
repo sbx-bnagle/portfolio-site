@@ -1,0 +1,61 @@
+// =========================================================
+// Content block: stats (2x big-number figures)
+// Mobile: stacked. sm and up: side by side.
+// =========================================================
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  max-width: var(--measure);
+  margin: 0 auto var(--s-6);      // no top margin or padding: the paragraph
+  padding-bottom: var(--s-5);     // above sets the gap, as it does for a heading
+
+  @include respondto('sm') {
+    container-type: inline-size;  // sizes the numbers below
+    grid-template-columns: repeat(2, minmax(0, 1fr));   // equal halves, whatever the numbers
+    gap: var(--s-5);
+  }
+}
+
+.stat { margin: 0; }
+
+.stat-num {
+  display: block;
+  font-size: var(--fs-stat);
+  line-height: var(--lh-none);
+  font-weight: 500;
+  letter-spacing: -.2rem;
+  margin-top: calc(-0.131em + 0.289rem);
+
+  // Side by side, also cap by the longest figure in the block (--stat-chars,
+  // set on .stats by the include) so a wide figure (492K) still fits its half
+  // where the column is narrow, and both figures land at one size: half the
+  // block less half the gap, over ~0.52em per character (measured: the widest
+  // of these glyphs runs 0.50em once the tracking is taken off).
+  @include respondto('sm') {
+    font-size: min(
+      var(--fs-stat),
+      calc((50cqi - 1.3125rem) / (var(--stat-chars, 4) * 0.52))
+    );
+  }
+}
+
+// A figure's unit: the "x" in "3x", the "K" in "492K". Same size as the
+// numerals either way; only the multiplication sign is nudged, since it sits
+// high in its em box and the numerals do not.
+.stat-unit {
+  font-weight: 500;
+  position: relative;
+
+  // 0.129em is the 1.15rem this was tuned at, over the 143px it was tuned on,
+  // so it holds its place now that a block's figures share one size.
+  &.is-times { top: 0.129em; }
+}
+
+.stat-label {
+  @include text-ui;
+  color: var(--ink);
+  margin-top: -8px;               // tucks under the numerals' baseline
+  // margin-top: var(--s-2);
+}

@@ -1,0 +1,29 @@
+{%- comment -%}
+  An image, with smaller and modern-format copies when they exist.
+  With an entry in _data/responsive.json (npm run images), it's a <picture>
+  offering AVIF and WebP at several widths, and the browser picks the smallest
+  that fills the slot; the original stays as the fallback <img>. Without one,
+  it's the plain <img>. Either way the <img> gets its width and height.
+  The <picture> is display: contents (.pic), so layout and styles treat the
+  <img> as if it sat directly in the parent.
+  Params:
+    path   URL path of the original ("/assets/img/ALCF/ar.jpg")
+    alt    alt text
+    sizes  how wide the image shows, as a sizes attribute (default 100vw)
+    attrs  extra attributes for the <img> ('loading="lazy" data-reveal')
+    class  class for the <img>
+{%- endcomment -%}
+{%- assign r = site.data.responsive[include.path] -%}
+{%- capture pic_img -%}
+<img src="{{ site.baseurl }}{{ include.path }}"{% if include.class %} class="{{ include.class }}"{% endif %}{% include media-attrs.html path=include.path %}{% if include.attrs %} {{ include.attrs }}{% endif %} alt="{{ include.alt }}">
+{%- endcapture -%}
+{%- if r -%}
+{%- assign pic_formats = "avif,webp" | split: "," -%}
+<picture class="pic">
+{%- for fmt in pic_formats -%}
+<source type="image/{{ fmt }}" sizes="{{ include.sizes | default: '100vw' }}" srcset="{% include srcset.html r=r fmt=fmt %}">
+{%- endfor -%}
+{{ pic_img }}</picture>
+{%- else -%}
+{{ pic_img }}
+{%- endif -%}

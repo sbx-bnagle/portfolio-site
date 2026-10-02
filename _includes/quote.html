@@ -1,0 +1,13 @@
+{%- comment -%}
+  Client quote. Params: text, cite (name), role (title, org).
+  See README for copy-paste usage.
+{%- endcomment -%}
+<blockquote class="pullquote">
+  <p class="pullquote-text">{{ include.text }}</p>
+  {%- if include.cite -%}
+  <footer class="pullquote-cite">
+    <span class="pullquote-name">{{ include.cite }}</span>
+    {%- if include.role -%}<span class="pullquote-role">{{ include.role }}</span>{%- endif -%}
+  </footer>
+  {%- endif -%}
+</blockquote>

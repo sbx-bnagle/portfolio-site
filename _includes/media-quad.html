@@ -1,0 +1,44 @@
+{%- comment -%}
+  Four-up media (2x2 grid, single column on mobile).
+  Slots a,b,c,d. Each accepts src_x / video_x / alt_x / caption_x.
+  Add autoplay_x=true to a video slot for a muted, looping video that starts on
+  its own, with a pause button; alt_x becomes its label.
+  Images and videos get a hairline border: border=false leaves it off for all
+  slots, border_x=false (or true) sets it for one slot.
+  Empty slot renders a placeholder. See README for copy-paste usage.
+{%- endcomment -%}
+<div class="media media-quad">
+  {%- assign slots = "a,b,c,d" | split: "," -%}
+  {%- for n in slots -%}
+  {%- assign src_key = "src_" | append: n -%}
+  {%- assign vid_key = "video_" | append: n -%}
+  {%- assign alt_key = "alt_" | append: n -%}
+  {%- assign cap_key = "caption_" | append: n -%}
+  {%- assign src = include[src_key] -%}
+  {%- assign vid = include[vid_key] -%}
+  {%- assign alt = include[alt_key] -%}
+  {%- assign cap = include[cap_key] -%}
+  {%- assign auto_key = "autoplay_" | append: n -%}
+  {%- assign auto = include[auto_key] -%}
+  {%- assign border_key = "border_" | append: n -%}
+  {%- assign border = include[border_key] -%}
+  {%- if border == nil -%}{%- assign border = include.border -%}{%- endif -%}
+  <figure>
+    <div class="media-frame{% if border == false or border == "false" %} is-borderless{% endif %}" style="--aspect: 1 / 1">
+      {%- assign vkey = vid | replace: "//", "/" -%}
+      {%- assign ikey = "/assets/img/" | append: src | replace: "//", "/" -%}
+      {%- if vid and auto -%}
+        <video data-autoplay data-reveal muted loop playsinline preload="none"{% include media-attrs.html path=vkey %}{% if alt %} aria-label="{{ alt }}"{% endif %}>{% include video-sources.html path=vkey %}</video>
+        {%- include video-toggle.html -%}
+      {%- elsif vid -%}
+        <video controls playsinline preload="metadata"{% include media-attrs.html path=vkey %}>{% include video-sources.html path=vkey %}</video>
+      {%- elsif src -%}
+        {%- include picture.html path=ikey alt=alt sizes="(min-width: 100rem) 388px, (min-width: 60rem) 24vw, (min-width: 38rem) 49vw, 98vw" attrs='loading="lazy" decoding="async" data-reveal' -%}
+      {%- else -%}
+        <span class="ph-label">{{ cap | default: "image / video" }}</span>
+      {%- endif -%}
+    </div>
+    {%- if cap and src or cap and vid -%}<figcaption>{{ cap }}</figcaption>{%- endif -%}
+  </figure>
+  {%- endfor -%}
+</div>

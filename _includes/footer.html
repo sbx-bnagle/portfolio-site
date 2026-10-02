@@ -1,0 +1,16 @@
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <p class="foot-contact">
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+      <a href="{{ site.linkedin }}">LinkedIn</a>
+    </p>
+    <!-- <p class="foot-meta">{{ site.title }} — {{ site.tagline }}</p> -->
+  </div>
+</footer>
+
+{%- if jekyll.environment == "production" and site.goatcounter != "" %}
+<!-- GoatCounter: cookie-free page counts. transitions.js counts the pages
+     reached through Swup, which a full page load doesn't happen for. -->
+<script data-goatcounter="https://{{ site.goatcounter }}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+{%- endif %}
+<script src="{{ '/assets/js/bundle.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

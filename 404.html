@@ -1,0 +1,20 @@
+---
+layout: default
+title: Page not found
+permalink: /404.html
+body_class: page-home
+sitemap: false
+---
+<div class="notes-index wrap">
+  <section class="notes-intro">
+    <h1 class="notes-lede">Page not found</h1>
+    <p class="notes-sub">
+      This page has moved or never existed. The <a href="{{ '/' | relative_url }}">selected work</a>,
+      <a href="{{ '/about/' | relative_url }}">about page</a>, and
+      <a href="{{ '/notes/' | relative_url }}">notes</a> are good places to start.
+    </p>
+  </section>
+  <figure class="notfound-art">
+    {% include picture.html path="/assets/img/404.png" alt="Ink illustration: a peanut in a top hat and monocle peers into an open treasure chest in a cave. Inside the lid it reads “404, Page Not Found,” and a skeleton lies slumped nearby." sizes="(min-width: 60rem) 48rem, 100vw" attrs='decoding="async"' %}
+  </figure>
+</div>

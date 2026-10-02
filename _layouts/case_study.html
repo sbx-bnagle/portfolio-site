@@ -1,0 +1,162 @@
+---
+layout: default
+body_class: page-case
+---
+<article class="case"{% if page.case_tint %} style="--case-tint: {{ page.case_tint }}"{% endif %}>
+  <header class="case-head wrap">
+    <!-- <p class="eyebrow">
+      {%- if page.disciplines -%}{{ page.disciplines | join: " · " }}{%- endif -%}
+    </p> -->
+    <h1 class="case-title">{{ page.title }}</h1>
+    {%- if page.subtitle -%}<p class="case-sub">{{ page.subtitle }}</p>{%- endif -%}
+
+    <dl class="case-facts">
+      <div><dt>Year</dt><dd>{{ page.year }}</dd></div>
+      <div><dt>Role</dt><dd>{{ page.role }}</dd></div>
+      <div class="status">
+          <dt>Status</dt>
+          {%- assign status_key = page.status | downcase -%}
+          <dd class="status-value{% if status_key == 'live' %} is-live{% elsif status_key == 'retired' or status_key == 'archived' %} is-retired{% endif %}">
+            {%- if page.live_url and page.status == "Live" -%}
+              {%- assign live_host = page.live_url | remove_first: 'https://' | remove_first: 'http://' | split: '/' | first | remove_first: 'www.' -%}
+              <a href="{{ page.live_url }}" rel="noopener">Live<span class="visually-hidden"> site at {{ live_host }}</span> <span aria-hidden="true">&nearr;</span></a>
+            {%- else -%}
+              {{ page.status }}
+            {%- endif -%}
+          </dd>
+      </div>
+    </dl>
+  </header>
+
+  {%- comment -%}
+    Hero proportions: hero_aspect from the sm breakpoint up (default 16:9) and
+    hero_aspect_mobile below it. hero_mobile and hero_video_mobile swap in a
+    mobile crop. The media query must match "sm" in _breakpoints.scss (38rem).
+  {%- endcomment -%}
+  {%- capture hero_style -%}
+    {%- if page.hero_aspect -%}--hero-aspect: {{ page.hero_aspect }};{%- endif -%}
+    {%- if page.hero_aspect_mobile -%}--hero-aspect-mobile: {{ page.hero_aspect_mobile }};{%- endif -%}
+  {%- endcapture -%}
+  {%- assign hero_mobile_media = "(max-width: 37.99rem)" -%}
+  {%- comment -%}
+    The hero's <source>s: AVIF and WebP copies of each crop when npm run images
+    has made them, then the originals. The mobile crop's sources come first so
+    their media query is tried before the desktop ones.
+  {%- endcomment -%}
+  {%- assign hero_formats = "avif,webp" | split: "," -%}
+  {%- assign hero_r = site.data.responsive[page.hero] -%}
+  {%- assign hero_mr = site.data.responsive[page.hero_mobile] -%}
+  {%- capture hero_sources -%}
+    {%- if page.hero_mobile -%}
+      {%- if hero_mr -%}{%- for fmt in hero_formats -%}
+      <source media="{{ hero_mobile_media }}" type="image/{{ fmt }}" sizes="100vw" srcset="{% include srcset.html r=hero_mr fmt=fmt %}">
+      {%- endfor -%}{%- endif -%}
+      <source media="{{ hero_mobile_media }}" srcset="{{ page.hero_mobile | relative_url }}">
+    {%- endif -%}
+    {%- if hero_r -%}{%- for fmt in hero_formats -%}
+      <source type="image/{{ fmt }}" sizes="(min-width: 100rem) 1600px, 100vw" srcset="{% include srcset.html r=hero_r fmt=fmt %}">
+    {%- endfor -%}{%- endif -%}
+  {%- endcapture -%}
+  {%- comment -%}
+    hero_caption: optional line of text under the hero, in the inline media
+    caption style. The hero box clips to fixed proportions, so the caption sits
+    outside it, inside the outer figure.
+  {%- endcomment -%}
+  {%- capture hero_caption -%}
+    {%- if page.hero_caption and page.hero_caption != "" -%}
+    <figcaption class="case-hero-caption wrap">{{ page.hero_caption }}</figcaption>
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- if page.hero_video -%}
+  {%- comment -%}
+    Looping hero video over a <picture> of its first frame; hero_loop: false
+    plays it once and holds on the last frame. The picture is the
+    poster: it shows before playback, with reduced motion, and without JS, and
+    unlike the poster attribute it can switch crops by screen size.
+    transitions.js starts playback and reveals the pause toggle.
+  {%- endcomment -%}
+  <figure class="case-hero-figure">
+  <div class="case-hero"{% if hero_style != "" %} style="{{ hero_style }}"{% endif %}>
+    {%- if page.hero %}
+    <picture>
+      {{- hero_sources -}}
+      <img src="{{ page.hero | relative_url }}"{% include media-attrs.html path=page.hero %} fetchpriority="high" alt="">
+    </picture>
+    {%- endif %}
+    <video data-autoplay muted{% unless page.hero_loop == false %} loop{% endunless %} playsinline preload="auto" aria-label="{{ page.hero_alt | default: page.title }}">
+      {%- include video-sources.html path=page.hero_video mobile=page.hero_video_mobile -%}
+    </video>
+    {% include video-toggle.html %}
+  </div>
+  {{ hero_caption }}
+  </figure>
+  {%- elsif page.hero -%}
+  <figure class="case-hero-figure">
+  <div class="case-hero"{% if hero_style != "" %} style="{{ hero_style }}"{% endif %}>
+    <picture>
+      {{- hero_sources -}}
+      <img src="{{ page.hero | relative_url }}"{% include media-attrs.html path=page.hero %} fetchpriority="high" alt="{{ page.hero_alt | default: page.title }}">
+    </picture>
+  </div>
+  {{ hero_caption }}
+  </figure>
+  {%- endif -%}
+
+  <div class="case-body wrap">
+    {{ content }}
+  </div>
+
+  {%- comment -%}
+    More work: every other case study in site.case_study_order, as a list of
+    rows: thumbnail, title, and the scope group names from its front matter.
+    Matched by slug, so archived copies elsewhere in the collection never match.
+    card_media images get alt="" since the title names the link, and like
+    the body's media they load lazily and fade in over a grey block. An image
+    card is rebuilt through picture.html from its src (written src='…'), so it
+    gets the small copies; a video card is used as written, with a pause
+    button. Only the title is a link, so that button isn't inside one; the
+    link's ::after still covers the whole row for the pointer.
+  {%- endcomment -%}
+  {%- assign order = site.case_study_order -%}
+  {%- assign here = 0 -%}
+  {%- for s in order -%}
+    {%- if s == page.slug -%}{%- assign here = forloop.index0 -%}{%- endif -%}
+  {%- endfor %}
+  <nav class="case-next wrap" aria-labelledby="more-work">
+    <h2 id="more-work" class="case-next-title">Additional Case Studies</h2>
+    <ul class="more-work">
+      {%- for step in (1..order.size) -%}
+      {%- assign i = here | plus: step | modulo: order.size -%}
+      {%- assign cs = site.case_studies | where: "slug", order[i] | first -%}
+      {%- if cs and cs.url != page.url %}
+      <li>
+        <div class="more-row">
+          <span class="more-row-media">
+            {%- if cs.card_media contains "<img" -%}
+            {%- assign card_src = cs.card_media | split: "src='" | last | split: "'" | first -%}
+            {%- include picture.html path=card_src alt="" sizes="(min-width: 38rem) 8rem, 6rem" attrs='loading="lazy" decoding="async" data-reveal' -%}
+            {%- else -%}
+            {{ cs.card_media | replace: '<video ', '<video data-reveal ' }}
+            {%- include video-toggle.html -%}
+            {%- endif -%}
+          </span>
+          <span class="more-row-text">
+            <a class="more-row-title" href="{{ cs.url | relative_url }}">{{ cs.title }}</a>
+            {%- if cs.scope %}
+            {%- assign names = "" -%}
+            {%- for group in cs.scope -%}
+              {%- for pair in group -%}
+                {%- assign names = names | append: "," | append: pair[0] -%}
+              {%- endfor -%}
+            {%- endfor -%}
+            {%- assign names = names | remove_first: "," | split: "," %}
+            <span class="more-row-scope">{{ names | join: ", " | capitalize }}</span>
+            {%- endif %}
+          </span>
+        </div>
+      </li>
+      {%- endif -%}
+      {%- endfor %}
+    </ul>
+  </nav>
+</article>

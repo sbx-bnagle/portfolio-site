@@ -1,0 +1,27 @@
+---
+layout: default
+title: Home
+body_class: page-home
+---
+<section class="hero wrap">
+  <h1 class="hero-intro">
+    For 15 years I&rsquo;ve helped institutions make complex ideas clear, engaging, and accessible. I work across strategy, design, and front-end development. I&rsquo;m at my best on projects where trust matters as much as craft.
+  </h1>
+</section>
+
+{% include case-study-cards.html %}
+
+<section class="clients wrap" aria-label="Selected clients">
+  <h2 class="section-label">Selected clients</h2>
+  <ul class="client-grid">
+    {%- for c in site.data.clients -%}
+    <li class="client">
+      {%- if c.logo and c.logo != "" -%}
+        <img src="{{ c.logo | relative_url }}"{% include media-attrs.html path=c.logo %} alt="{{ c.name }}">
+      {%- else -%}
+        <span class="client-name">{{ c.name }}</span>
+      {%- endif -%}
+    </li>
+    {%- endfor -%}
+  </ul>
+</section>

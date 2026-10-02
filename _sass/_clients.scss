@@ -1,0 +1,39 @@
+// =========================================================
+// Client grid (homepage) — on the 8-col grid.
+// Mobile: 1 per row. sm: 2 per row. md: 4 per row.
+// =========================================================
+
+.clients {
+  padding-block: var(--s-6);
+  border-top: 1px solid var(--line);
+}
+
+.client-grid {
+  @include grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.client {
+  grid-column: 1 / -1;            // mobile: full row
+  background: var(--paper);
+  border: 1px solid var(--line);
+  min-height: 5rem;
+  display: grid;
+  place-items: center;
+  padding: var(--s-3);
+  text-align: center;
+
+  img { max-height: 4.25rem; width: auto; }
+
+  @include respondto('sm') {
+    grid-column: span 4;          // 2 per row
+    min-height: 7rem;
+  }
+  @include respondto('md') {
+    grid-column: span 2;          // 4 per row
+  }
+}
+
+.client-name { font-size: var(--fs-sm); color: var(--ink-2-small); }

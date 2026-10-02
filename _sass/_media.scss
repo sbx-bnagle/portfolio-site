@@ -1,0 +1,210 @@
+// =========================================================
+// Content blocks: media (full / duo / quad)
+// Mobile: single column. sm and up: two columns.
+// =========================================================
+
+.media {
+  margin-block: var(--s-5);
+
+  // Back to back, media sit the same half gutter apart vertically as they do
+  // side by side. Both margins are set: adjoining margins collapse to the
+  // larger of the two.
+  &:has(+ .media) { margin-bottom: var(--media-gap); }
+  + .media { margin-top: var(--media-gap); }
+
+  // More room before text (paragraphs, headings, lists) than between two
+  // media blocks in a row.
+  &:has(+ :is(p, h1, h2, h3, h4, h5, h6, ul, ol)) { margin-bottom: var(--s-7); }
+}
+
+// Caption type style, shared by inline media, slides and the case study hero
+// caption.
+.media figcaption,
+.slide-media figcaption,
+.case-hero-caption {
+  @include text-caption;
+  color: var(--ink-2-small);
+  margin-top: var(--s-2);
+}
+
+// Real images and videos (not empty placeholders) sit on a muted,
+// project-tinted mat with a hairline border; border=false on the include
+// leaves the border off. --case-tint is set per case study on .case; falls
+// back to near-white.
+.media-frame {
+  position: relative;              // anchors a video's pause button
+
+  // A linked image sits inside an <a>, and an image with small copies inside a
+  // <picture class="pic"> (display: contents), so match those too. :where()
+  // keeps this at the specificity of .media-frame alone: a :has() list takes
+  // that of its most specific entry (.pic), which would outrank .is-borderless.
+  &:where(:has(> img, > .pic > img, > a > img, > a > .pic > img, > video)) {
+    aspect-ratio: auto;
+    background: var(--case-tint, var(--paper-2));
+    border: 1px solid var(--line);
+    // padding: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  &.is-borderless { border: 0; }
+
+  > img,
+  > .pic > img,
+  > a > img,
+  > a > .pic > img,
+  > video {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  // The anchor is only a wrapper: let the image set the box.
+  > a { display: block; }
+}
+
+// Embedded video (see _includes/video.html). The frame is fluid at 16:9.
+.media-video iframe {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+// Slotted figures are grid items; the UA's 40px inline margin would keep them
+// from filling their track and would widen the gutter.
+.media-duo figure,
+.media-quad figure { margin: 0; }
+
+.media-duo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--media-gap);          // half a site gutter between items, as in the quad
+
+  @include respondto('sm') {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+// One caption for the pair rather than one per slot (media-duo.html's `caption`).
+// The two items keep their own columns inside; the figure around them carries
+// the block margin and the caption, which runs the full width beneath both.
+.media-duo-figure {
+  margin-inline: 0;               // the UA's figure margin; .case-body re-sets it
+
+  > .media-duo { margin-block: 0; }
+}
+
+// Stacked on phones, two up on small screens, then all four in a row from md,
+// where a quarter of the block is still wide enough to read.
+.media-quad {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--media-gap);          // half a site gutter between items
+
+  @include respondto('sm') {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include respondto('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Pause/play for auto-playing, looping videos (WCAG 2.2.2): the case study
+// hero and media videos with autoplay. Hidden until transitions.js takes over
+// playback, since it does nothing without JS. Its parent must be positioned.
+.video-toggle {
+  position: absolute;
+  right: var(--s-3);
+  bottom: var(--s-3);
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.35);
+  color: var(--paper);
+  cursor: pointer;
+
+  &[hidden] { display: none; }
+  svg { width: 0.875rem; height: 0.875rem; }
+  .icon-play { display: none; }
+  &.is-paused .icon-play { display: block; }
+  &.is-paused .icon-pause { display: none; }
+  // Three rings, dark, light, dark, so focus shows on any footage.
+  &:focus-visible {
+    border-radius: 50%;           // keeps the rings round over the base focus style
+    outline: 2px solid var(--paper);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--ink);
+  }
+
+  // With a mouse, keep it out of the way until the pointer is over the media
+  // (its parent) or the button has keyboard focus. Touch screens can't hover,
+  // so there it stays visible.
+  @media (hover: hover) and (pointer: fine) {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    :hover > &,
+    &:focus-visible { opacity: 1; }
+  }
+}
+
+// =========================================================
+// Photo mosaic (_includes/mosaic.html)
+// The arrangement nanograv.org uses: five tiles on a six-column grid, with the
+// row tracks in the same ratio as the live site's (154 / 139 / 303 of its 600px
+// height), so the block keeps its proportions at any width.
+// =========================================================
+.mosaic {
+  // One value for the hairline between tiles; the case study uses the same one
+  // for the gap left outside the block, so inside and outside match.
+  --mosaic-gap: 2px;
+
+  display: grid;
+  gap: var(--mosaic-gap);
+
+  // Each image sits in a tile span that takes the grid placement; the image
+  // fills it.
+  > span { display: block; min-width: 0; }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Phones: the tiles would be postage stamps on the real grid, so they stack
+  // two across with the group shot running the full width.
+  grid-template-columns: repeat(2, 1fr);
+
+  > span { aspect-ratio: 3 / 2; }
+  .mosaic-d { grid-column: 1 / -1; aspect-ratio: 879 / 600; }
+  .mosaic-e { aspect-ratio: 3 / 2; }
+
+  @include respondto('sm') {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 154fr 139fr 303fr;
+    aspect-ratio: 1440 / 600;
+
+    > span { aspect-ratio: auto; }
+
+    .mosaic-a { grid-area: 1 / 1 / 2 / 2; }
+    .mosaic-b { grid-area: 1 / 2 / 2 / 3; }
+    .mosaic-c { grid-area: 1 / 5 / 3 / 7; }
+    .mosaic-d { grid-area: 2 / 2 / 4 / 5; }
+
+    // Bottom right: three quarters of its cell, held against the cell's top and
+    // left edges, so the ground opens up to its right and below.
+    .mosaic-e {
+      grid-area: 3 / 5 / 4 / 7;
+      width: 75%;
+      height: 75%;
+      margin-right: auto;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{%- comment -%}
+  The <source>s for a video, lightest first, from _data/video.json (npm run
+  videos): the phone copies below the sm breakpoint, then AV1, then the
+  original H.264, which every browser can play. Without an entry, just the
+  original.
+  Params: path   URL path of the original ("/assets/video/p5-phones.mp4")
+          mobile optional hand-made phone crop, used instead of the -m copies
+{%- endcomment -%}
+{%- assign vs = site.data.video[include.path] -%}
+{%- assign vs_small = "(max-width: 37.99rem)" -%}
+{%- if include.mobile -%}
+  {%- assign vsm = site.data.video[include.mobile] -%}
+  {%- if vsm.av1 -%}<source src="{{ site.baseurl }}{{ vsm.av1 }}" type='{{ vsm.av1_type }}' media="{{ vs_small }}">{%- endif -%}
+  <source src="{{ include.mobile | relative_url }}" type="video/mp4" media="{{ vs_small }}">
+{%- else -%}
+  {%- if vs.m_av1 -%}<source src="{{ site.baseurl }}{{ vs.m_av1 }}" type='{{ vs.m_av1_type }}' media="{{ vs_small }}">{%- endif -%}
+  {%- if vs.m -%}<source src="{{ site.baseurl }}{{ vs.m }}" type="video/mp4" media="{{ vs_small }}">{%- endif -%}
+{%- endif -%}
+{%- if vs.av1 -%}<source src="{{ site.baseurl }}{{ vs.av1 }}" type='{{ vs.av1_type }}'>{%- endif -%}
+<source src="{{ include.path | relative_url }}" type="video/mp4">

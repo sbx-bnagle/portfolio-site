@@ -1,0 +1,70 @@
+{%- comment -%}
+  Horizontal slider: a scrollable rail of mixed slides, advanced by the arrow
+  buttons, a trackpad, a swipe, or the arrow keys when the rail has focus.
+  Slides come from front matter, so one slider can mix images, videos and
+  social posts. Each item takes one of:
+    image: "USF/apple.png"   + alt, caption, link, border (false drops the hairline)
+    video: "/assets/video/x.mp4" + alt, caption, autoplay (muted, looping)
+    tweet: { author, handle, date, datetime, url, text, src, alt }
+  Params: items (required), label (names the region for screen readers).
+  Usage: {% include slider.html items=page.recognition_slides label="Recognition" %}
+{%- endcomment -%}
+{%- assign items = include.items -%}
+{%- if items and items != empty -%}
+<div class="slider" data-slider>
+  <div class="slider-rail" tabindex="0" role="region" aria-label="{{ include.label | default: 'Slider' }}, scrollable">
+    {%- for item in items -%}
+    <div class="slide">
+      {%- if item.article -%}
+        {%- comment -%}
+          publication_url links the publication, author_url the byline; with
+          neither, url (the article) links the publication name.
+        {%- endcomment -%}
+        {%- assign article_name_url = item.article.publication_url | default: item.article.url -%}
+        {%- include tweet.html author=item.article.publication author_url=article_name_url handle=item.article.author handle_url=item.article.author_url avatar=item.article.avatar url=item.article.url text=item.article.quote -%}
+      {%- elsif item.tweet -%}
+        {%- include tweet.html author=item.tweet.author author_url=item.tweet.author_url handle=item.tweet.handle handle_url=item.tweet.handle_url avatar=item.tweet.avatar date=item.tweet.date datetime=item.tweet.datetime url=item.tweet.url text=item.tweet.text src=item.tweet.src alt=item.tweet.alt -%}
+      {%- elsif item.video -%}
+      <figure class="slide-media">
+        <div class="media-frame{% if item.border == false %} is-borderless{% endif %}">
+          {%- if item.autoplay -%}
+          {%- assign vkey = item.video | replace: "//", "/" -%}
+          <video data-autoplay data-reveal muted loop playsinline preload="none"{% include media-attrs.html path=vkey %}{% if item.alt %} aria-label="{{ item.alt }}"{% endif %}>{% include video-sources.html path=vkey %}</video>
+          {%- include video-toggle.html -%}
+          {%- else -%}
+          <video src="{{ item.video | relative_url }}" controls playsinline></video>
+          {%- endif -%}
+        </div>
+        {%- if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif -%}
+      </figure>
+      {%- elsif item.image -%}
+      {%- assign img = item.image -%}
+      {%- assign lead = img | slice: 0, 1 -%}
+      {%- if lead == '/' -%}{%- assign img = img | slice: 1, 999 -%}{%- endif -%}
+      {%- assign ikey = "/assets/img/" | append: img -%}
+      <figure class="slide-media">
+        <div class="media-frame{% if item.border == false %} is-borderless{% endif %}">
+          {%- if item.link -%}
+          <a href="{{ item.link }}" rel="noopener">
+            {%- include picture.html path=ikey alt=item.alt sizes="min(24rem, 78vw)" attrs='loading="lazy" decoding="async" data-reveal' -%}
+          </a>
+          {%- else -%}
+          {%- include picture.html path=ikey alt=item.alt sizes="min(24rem, 78vw)" attrs='loading="lazy" decoding="async" data-reveal' -%}
+          {%- endif -%}
+        </div>
+        {%- if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif -%}
+      </figure>
+      {%- endif -%}
+    </div>
+    {%- endfor -%}
+  </div>
+  <div class="slider-nav">
+    <button class="slider-btn" type="button" data-slider-prev aria-label="Previous" hidden>
+      <span class="slider-arrow" aria-hidden="true">&larr;</span>
+    </button>
+    <button class="slider-btn" type="button" data-slider-next aria-label="Next" hidden>
+      <span class="slider-arrow" aria-hidden="true">&rarr;</span>
+    </button>
+  </div>
+</div>
+{%- endif -%}

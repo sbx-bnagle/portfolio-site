@@ -1,0 +1,18 @@
+{%- comment -%}
+  YouTube embed. Pass id (the part after watch?v=), title (what screen readers
+  announce for the frame, so name the video), and an optional caption.
+  Renders as a media-full figure so it picks up the same width rules.
+  Uses youtube-nocookie.com (privacy-enhanced mode) and loads lazily.
+{%- endcomment -%}
+<figure class="media media-full media-video">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/{{ include.id }}"
+    title="{{ include.title | default: 'YouTube video' }}"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+  {%- if include.caption -%}
+  <figcaption>{{ include.caption }}</figcaption>
+  {%- endif -%}
+</figure>

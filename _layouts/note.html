@@ -1,0 +1,14 @@
+---
+layout: default
+---
+<article class="note wrap">
+  <header class="note-head">
+    <h1 class="note-title">{{ page.title }}</h1>
+  </header>
+  <div class="note-body">
+    {{ content }}
+  </div>
+  <nav class="note-back" aria-label="More notes">
+    <a href="{{ '/notes/' | relative_url }}">&larr; All notes</a>
+  </nav>
+</article>

@@ -1,0 +1,233 @@
+// =========================================================
+// Base: reset, document, typography, shared utilities
+// =========================================================
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  // There is no dark theme here. Say so, or a browser in dark mode paints the
+  // canvas - the strip below a short page, and the overscroll area - with its
+  // own dark grey, since nothing else claims it.
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  // The page colour lives on body (and is swapped per page: .page-about and
+  // friends below), so body has to reach the bottom of the viewport. Without
+  // this a page shorter than the window leaves a strip nothing has painted.
+  min-height: 100dvh;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: var(--lh-loose);
+  color: var(--ink);
+  background: var(--paper);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+// height: auto keeps an element's width/height attributes (which reserve its
+// space before it loads) from fixing its height once CSS scales its width.
+img, video { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+
+h1, h2, h3, h4, h5 {
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  margin: 0;
+}
+
+// Section headings: an h3 in a case study reads as a section of its own, at
+// the same size as an h2.
+h2, h3 { font-size: var(--fs-md); }
+
+// Body text: paragraphs in the main content. Classed paragraphs that set their
+// own size and line height (.case-sub, .pullquote-text) keep them.
+main p {
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+}
+
+
+// Centered max-width container
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--wrap-pad);
+}
+
+.section-label {
+  font-size: var(--fs-base);
+  color: var(--ink-2-small);
+  margin-bottom: var(--s-4);
+}
+
+
+// Late-loading media (data-reveal; see media.js): until a file has loaded and
+// is on screen, the box it will fill is a flat grey block, then it fades in.
+// The block is the parent's background, so it also sits behind transparent
+// images until they arrive, then gives way to the parent's own. Only with JS
+// (html.js): without it, media simply shows as it loads.
+.js [data-reveal] {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+
+  &.is-revealed { opacity: 1; }
+}
+
+.js :has(> [data-reveal], > .pic > [data-reveal]) { transition: background-color 0.6s ease; }
+.js :has(> [data-reveal]:not(.is-revealed), > .pic > [data-reveal]:not(.is-revealed)) { background-color: #d4d4d2; }
+
+// An image with small copies (_includes/picture.html) is wrapped in a
+// <picture>; it takes no box of its own, so the <img> lays out and is styled
+// as if it sat in the parent directly.
+.pic { display: contents; }
+
+
+// A page title: the case study title, also the Notes title.
+@mixin page-title {
+  font-size: var(--fs-2xl);
+}
+
+// Shared type styles. Each sets size and leading only; colour and weight stay
+// with the element.
+// Large text over a few lines: page subtitles and the About intro.
+@mixin text-lede {
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+}
+
+// Captions, credits and meta lines.
+@mixin text-caption {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-loose);
+}
+
+// Interface labels in the nav's type: the nav, the stat labels, the More work
+// heading, the project details summary.
+@mixin text-ui {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+// A page subtitle: the case study subtitle, also used under the Notes title.
+// From md it spans the same 7 columns as case study body text; the parent must
+// be a .wrap for the columns to come out the same.
+@mixin subtitle {
+  @include text-lede;
+  color: var(--ink-2);
+  max-width: var(--measure);
+
+  @include respondto('md') {
+    --sub-col: calc((100% - 11 * var(--grid-gap)) / 12);
+
+    max-width: none;
+    width: calc(7 * var(--sub-col) + 6 * var(--grid-gap));
+  }
+}
+
+
+// Small print under a section's paragraphs (_includes/small-print.html):
+// credits and short notes about the media below. The caption size, but in the
+// body's ink and upright.
+.small-print {
+  @include text-caption;
+  font-style: normal;
+  color: var(--ink);
+}
+
+
+// Placeholder media boxes (wireframe mode)
+.media-frame {
+  aspect-ratio: var(--aspect, 16 / 9);
+  background: var(--ph-bg);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  > img, > .pic > img, > video { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.ph-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--ph-text);
+}
+
+
+// Focus
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+
+// Transitions
+#main { transition: opacity .65s ease; }
+html.is-animating #main { opacity: 0; }
+
+.page-about, .page-about header {
+  background-color: #24242b;
+  color: #fff;
+}
+
+// On the dark page the lighter grey is the one with contrast (4.7:1), and the
+// focus ring switches to light.
+.page-about {
+  --ink-2-small: var(--ink-2);
+
+  a:focus-visible, button:focus-visible { outline-color: var(--paper); }
+}
+
+.page-home, .page-home header,
+.page-case, .page-case header {
+  background-color: #f9f9f6;
+}
+
+.page-notes, .page-notes header  {
+  background-color: #d9c8ba;
+}
+
+// Skip link: off screen until it has keyboard focus, then top left, above the
+// sticky header.
+.skip-link {
+  position: absolute;
+  left: var(--s-3);
+  top: var(--s-3);
+  z-index: 1000;
+  padding: var(--s-2) var(--s-3);
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 500;
+  transform: translateY(calc(-100% - var(--s-4)));
+
+  &:focus-visible { transform: none; }
+}
+
+// <main> takes focus from the skip link and after page changes, but it isn't
+// a control, so no ring.
+main:focus { outline: none; }
+
+// Hidden on screen, still announced by screen readers.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

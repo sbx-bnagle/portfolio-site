@@ -1,0 +1,114 @@
+// =========================================================
+// Social posts (_includes/tweet.html)
+// The post as real text, not a screenshot: it scales with the reader's font
+// size and reads in a screen reader. Cards stack on phones, sit two up from
+// sm and three up from md when wrapped in <div class="tweets">.
+// =========================================================
+
+.tweets {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  margin-block: var(--s-5);
+
+  @include respondto('sm') { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @include respondto('md') { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  // In a row the grid sets the width and the spacing.
+  > .tweet-card {
+    max-width: none;
+    margin-block: 0;
+  }
+}
+
+.tweet-card {
+  max-width: var(--measure);
+  margin-block: var(--s-5);
+  padding: var(--s-4);
+  border-radius: var(--radius-card);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tweet-quote { margin: 0; }
+
+.tweet-text {
+  margin: 0;
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+.tweet-media {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: var(--s-3);
+  border-radius: 6px;
+}
+
+// Scoped under the card so it beats the shared `.media figcaption` caption style.
+.tweet-card .tweet-meta {
+  // Icon on the left, the name above the handle or byline, with both sharing
+  // the name's left edge. Without an icon the two simply stack.
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0.1rem;
+  align-items: center;
+  margin-top: var(--s-3);
+  padding-inline: 0;
+  @include text-caption;
+  color: var(--ink-2);
+
+  &:has(.tweet-avatar) {
+    grid-template-columns: auto 1fr;
+    column-gap: var(--s-2);
+  }
+
+  // The icon, name and handle all sit directly on this grid.
+  .tweet-source { display: contents; }
+
+  .tweet-avatar {
+    grid-row: span 2;
+    align-self: center;
+  }
+
+  .tweet-author {
+    font-weight: 600;
+    color: var(--paper);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+
+  // The name and handle are stacked links: 3px above and below brings each
+  // to a 24px target (WCAG 2.5.8).
+  .tweet-author,
+  .tweet-handle { padding-block: 3px; }
+}
+
+// The card is dark, so its focus ring is light.
+.tweet-card :is(a, button):focus-visible { outline-color: var(--paper); }
+
+// Avatar or favicon: a circle for an account, which also reads well for a
+// publication's mark. Decorative, since the name sits right beside it.
+.tweet-avatar {
+  display: block;
+  width: 2.375rem;                // about the height of the two lines beside it
+  height: 2.375rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--ph-bg);
+}

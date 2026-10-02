@@ -1,0 +1,171 @@
+// =========================================================
+// About page
+// =========================================================
+
+.about { 
+  padding-block: var(--s-6) var(--s-7); 
+  @include grid;  
+
+  // Below md the three columns stack, each across the whole grid, with a rule
+  // between them.
+  > * { grid-column: 1 / -1; }
+  > * + * {
+    @include below('md') {
+      border-top: 1px solid var(--ink-2);
+      padding-top: var(--s-5);
+    }
+  }
+
+  // Phones: the title hangs from the same line as the Notes and case study
+  // titles, which both start --s-7 down.
+  @include below('sm') { padding-top: var(--s-7); }
+}
+
+.page-about .section-label {
+  color: var(--paper);
+}
+
+// Phones: the page's own label is its title, at the Notes title size.
+.about-intro > .section-label {
+  @include below('sm') { @include page-title; }
+}
+
+.about-intro {
+  @include respondto('md') {
+    align-items: start;
+    grid-column: span 4;
+    padding-right: 2rem;
+  }
+}
+
+.about-photo {
+  max-width: 16rem;               
+  margin-bottom: var(--s-4);
+
+  .media-frame { --aspect: 2 / 1; }
+
+  // Phones: the full width of the grid, cropped to 4:3 from the top.
+  @include below('sm') {
+    max-width: none;
+
+    .media-frame { aspect-ratio: 4 / 3; }
+    .media-frame > .pic > img {
+      position: absolute;           // fills the frame; a grid row won't resolve height: 100%
+      inset: 0;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 0%;          // the photo has little headroom: keep all of it
+    }
+  }
+
+  @include respondto('md') {
+    max-width: none;
+    max-height: 400px;
+    overflow: hidden;
+    // margin-bottom: 0;
+  }
+}
+
+.about-block {
+  @include respondto('md') {
+    grid-column: span 2;
+  }
+}
+
+.caps-block {
+  @include respondto('md') {
+    grid-column: 5 / span 2;
+  }
+}
+
+.about-text {
+  p {
+    max-width: var(--measure);
+    margin: 0 0 var(--s-4);
+  }
+
+  @include respondto('md') {
+    grid-column: 4 / 9;
+  }
+}
+
+.about-lede {
+  @include text-lede;             // the case study subtitle's size
+  font-weight: 500;
+  margin-bottom: var(--s-4);
+}
+
+
+.cap {
+  h3 {
+    font-size: var(--fs-base);
+    padding-bottom: var(--s-1);
+    color: var(--paper);
+  }
+  ul { 
+    list-style: none;
+    margin: 0; 
+    padding-left: 0;
+    padding-bottom: var(--s-4);
+  }
+  li { 
+    line-height: var(--lh-tight);
+    padding-bottom: var(--s-1);
+  }
+}
+
+
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  padding-bottom: var(--s-4);
+  li {
+    line-height: var(--lh-snug);
+    padding-block: var(--s-1);
+  }
+}
+
+.tl-when, .tl-what { 
+  display: block;
+}
+
+.recognition {
+  margin: 0;
+  padding-left: 1.1rem;
+
+  li { margin-bottom: var(--s-2); }
+}
+
+.experience {
+  h3 {
+    font-size: var(--fs-base);
+    // padding-bottom: var(--s-1);
+    color: var(--paper);
+  }
+}
+
+// Outline lozenge button on the dark About page.
+.resume-link {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: var(--s-2);
+  font-size: var(--fs-base);
+  padding: 0.5em 1em;
+  border: 1px solid var(--paper);
+  border-radius: 999px;
+  color: var(--paper);
+  line-height: var(--lh-none);
+  text-decoration: none;
+
+  // The global focus ring uses --ink, which disappears on this background.
+  &:focus-visible { outline-color: var(--paper); }
+}
+
+.resume-link__icon {
+  width: 0.8em;
+  height: 0.8em;
+}

@@ -1,0 +1,24 @@
+---
+layout: default
+title: Notes
+permalink: /notes/
+body_class: page-notes
+---
+<div class="notes-index wrap">
+  <section class="notes-intro">
+    <h1 class="notes-lede">
+      Notes
+    </h1>
+    <p class="notes-sub">
+      An occasional place for thoughts on work and the odd
+      side project.
+    </p>
+  </section>
+
+  <ul class="notes-list">
+    {%- assign notes = site.notes | sort: "date" | reverse -%}
+    {%- for n in notes -%}
+    <li><a href="{{ n.url | relative_url }}">{{ n.title }}</a></li>
+    {%- endfor -%}
+  </ul>
+</div>

@@ -1,0 +1,74 @@
+# --- Site ---
+title: "Brad Nagle"
+tagline: "Senior designer and strategist"   # matches the resume
+email: "contact@bradnagle.com"
+linkedin: "https://www.linkedin.com/in/brad-nagle-b4299024"
+description: >-
+  Fifteen years helping universities and research institutions plan and
+  build websites that are clear, accessible, and easy to maintain.
+url: "https://bradnagle.com"     # full links: canonical, sitemap, sharing previews
+baseurl: ""
+# Alt text for the default sharing image (assets/img/default.png).
+og_alt: "Brad Nagle smiling, beside a hand-drawn speech bubble that says “Hi!”"
+
+# --- Build ---
+markdown: kramdown
+permalink: pretty
+sass:
+  style: compressed
+  sass_dir: _sass
+
+# --- Collections ---
+collections:
+  case_studies:
+    output: true
+    permalink: /work/:name/
+  notes:
+    output: true
+    permalink: /notes/:name/
+
+# --- Front-matter defaults ---
+defaults:
+  - scope:
+      path: ""
+      type: case_studies
+    values:
+      layout: case_study
+  - scope:
+      path: ""
+      type: notes
+    values:
+      layout: note
+      body_class: page-notes
+
+# Order the homepage cards explicitly (filenames without extension).
+# The cards include reads this so you control sequence without renaming files.
+case_study_order:
+  - us-fusion
+  - alcf
+  - nanograv
+  - p5-report
+
+# --- Analytics ---
+# GoatCounter site code: the "bradnagle" in bradnagle.goatcounter.com. The
+# counter only loads in production builds (JEKYLL_ENV=production), so local
+# work isn't counted. Leave empty to turn it off.
+goatcounter: "bradnagle"
+
+# --- Maps ---
+# Public Mapbox access token (pk.…) for the U.S. Fusion map
+# (_includes/fusion-map.html). The map's style belongs to the usfusionenergy
+# Mapbox account, so use that account's token. If the token has URL
+# restrictions, add this site's domain and http://localhost:4000 in Mapbox.
+# Leave empty to show the fallback image. Restart jekyll serve after changing.
+mapbox_token: "pk.eyJ1IjoidXNmdXNpb25lbmVyZ3kiLCJhIjoiY211MnJlZ2U4MDEwZzJ4b29jMW43dzE1dSJ9.5VujNnY6BmWf7v0zwkuUXg"
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - node_modules
+  - package.json
+  - package-lock.json
+  - scripts

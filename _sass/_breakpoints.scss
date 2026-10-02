@@ -1,0 +1,39 @@
+@use "sass:map";
+
+// =========================================================
+// Breakpoints (mobile-first)
+// Base styles target the smallest screen; respondto layers
+// enhancements upward at min-width. Each component nests its
+// own responsive rules: @include respondto('md') { ... }
+// =========================================================
+
+$breakpoints: (
+  "sm": "(min-width: 38rem)",   // ~608px — large phone / small tablet
+  "md": "(min-width: 60rem)",   // ~960px — tablet / desktop
+  "wide": "(min-width: 64rem)", // 1024px — room for the nav links from column 10
+  "lg": "(min-width: 100rem)",  // 1600px — case hero stops growing
+);
+
+@mixin respondto($size) {
+  @if not map.has-key($breakpoints, $size) {
+    @error "respondto(): unknown breakpoint `#{$size}`. "
+         + "Available: #{map.keys($breakpoints)}.";
+  }
+
+  @media #{map.get($breakpoints, $size)} {
+    @content;
+  }
+}
+
+// The opposite: screens narrower than the breakpoint, for the few rules that
+// only apply below it (phone margins, spacing, the collapsed project details).
+@mixin below($size) {
+  @if not map.has-key($breakpoints, $size) {
+    @error "below(): unknown breakpoint `#{$size}`. "
+         + "Available: #{map.keys($breakpoints)}.";
+  }
+
+  @media not all and #{map.get($breakpoints, $size)} {
+    @content;
+  }
+}

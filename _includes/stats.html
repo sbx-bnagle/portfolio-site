@@ -1,0 +1,36 @@
+{%- comment -%}
+  Two figures, each a large number with a label.
+  Params: n1, l1, n2, l2. See README for copy-paste usage.
+  A trailing non-digit (the "x" in 3x, the "K" in 492K) is set as the figure's
+  unit, at the same size as the numerals. Both figures are sized together, off
+  the longer of the two, so one being "4x" and the other "492K" does not leave
+  them at different sizes.
+{%- endcomment -%}
+{%- assign digits = "0123456789" -%}
+{%- assign a = include.n1 | append: "" -%}
+{%- assign b = include.n2 | append: "" -%}
+{%- assign chars = a | size -%}
+{%- assign bchars = b | size -%}
+{%- if bchars > chars -%}{%- assign chars = bchars -%}{%- endif -%}
+<div class="stats" style="--stat-chars: {{ chars }}">
+  {%- assign slots = "1,2" | split: "," -%}
+  {%- for n in slots -%}
+  {%- assign num_key = "n" | append: n -%}
+  {%- assign label_key = "l" | append: n -%}
+  {%- assign num = include[num_key] | append: "" -%}
+  {%- assign unit = num | slice: -1 -%}
+  <figure class="stat">
+    <span class="stat-num">
+      {%- if digits contains unit -%}
+        {{ num }}
+      {%- else -%}
+        {%- assign len = num | size | minus: 1 -%}
+        {%- assign times = false -%}
+        {%- if unit == "x" or unit == "X" -%}{%- assign times = true -%}{%- endif -%}
+        {{ num | slice: 0, len }}<span class="stat-unit{% if times %} is-times{% endif %}">{% if times %}&times;{% else %}{{ unit }}{% endif %}</span>
+      {%- endif -%}
+    </span>
+    <figcaption class="stat-label">{{ include[label_key] }}</figcaption>
+  </figure>
+  {%- endfor -%}
+</div>

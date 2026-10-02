@@ -1,0 +1,27 @@
+---
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+{%- comment -%}
+  Every page and published case study and note. A page opts out with
+  `sitemap: false` in its front matter; unpublished notes never build, so
+  they're left out on their own.
+{%- endcomment %}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for p in site.html_pages -%}
+  {%- unless p.sitemap == false %}
+  <url><loc>{{ p.url | absolute_url }}</loc></url>
+  {%- endunless -%}
+{%- endfor -%}
+{%- for p in site.case_studies -%}
+  {%- unless p.sitemap == false %}
+  <url><loc>{{ p.url | absolute_url }}</loc></url>
+  {%- endunless -%}
+{%- endfor -%}
+{%- for p in site.notes -%}
+  {%- unless p.sitemap == false %}
+  <url><loc>{{ p.url | absolute_url }}</loc></url>
+  {%- endunless -%}
+{%- endfor %}
+</urlset>

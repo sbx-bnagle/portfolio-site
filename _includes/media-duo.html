@@ -1,0 +1,59 @@
+{%- comment -%}
+  Two-up media. Slots a,b. Each accepts src_x / video_x / alt_x / caption_x.
+  Add autoplay_x=true to a video slot for a muted, looping video that starts on
+  its own, with a pause button (see transitions.js); alt_x becomes its label.
+  Images and videos get a hairline border: border=false leaves it off for both
+  slots, border_x=false (or true) sets it for one slot.
+  caption (no suffix) captions the pair instead of a slot: the two items keep
+  their columns and one caption runs under both. Use it when the point is the
+  relationship between the two, not what either one is. Don't mix it with
+  caption_a / caption_b.
+  Empty slot renders a placeholder. See README for copy-paste usage.
+{%- endcomment -%}
+{%- assign shared = include.caption -%}
+{%- if shared -%}
+<figure class="media media-duo-figure">
+  <div class="media-duo">
+{%- else -%}
+<div class="media media-duo">
+{%- endif -%}
+  {%- assign slots = "a,b" | split: "," -%}
+  {%- for n in slots -%}
+  {%- assign src_key = "src_" | append: n -%}
+  {%- assign vid_key = "video_" | append: n -%}
+  {%- assign alt_key = "alt_" | append: n -%}
+  {%- assign cap_key = "caption_" | append: n -%}
+  {%- assign src = include[src_key] -%}
+  {%- assign vid = include[vid_key] -%}
+  {%- assign alt = include[alt_key] -%}
+  {%- assign cap = include[cap_key] -%}
+  {%- assign auto_key = "autoplay_" | append: n -%}
+  {%- assign auto = include[auto_key] -%}
+  {%- assign border_key = "border_" | append: n -%}
+  {%- assign border = include[border_key] -%}
+  {%- if border == nil -%}{%- assign border = include.border -%}{%- endif -%}
+  <figure>
+    <div class="media-frame{% if border == false or border == "false" %} is-borderless{% endif %}" style="--aspect: 4 / 3">
+      {%- assign vkey = vid | replace: "//", "/" -%}
+      {%- assign ikey = "/assets/img/" | append: src | replace: "//", "/" -%}
+      {%- if vid and auto -%}
+        <video data-autoplay data-reveal muted loop playsinline preload="none"{% include media-attrs.html path=vkey %}{% if alt %} aria-label="{{ alt }}"{% endif %}>{% include video-sources.html path=vkey %}</video>
+        {%- include video-toggle.html -%}
+      {%- elsif vid -%}
+        <video controls playsinline preload="metadata"{% include media-attrs.html path=vkey %}>{% include video-sources.html path=vkey %}</video>
+      {%- elsif src -%}
+        {%- include picture.html path=ikey alt=alt sizes="(min-width: 100rem) 784px, (min-width: 38rem) 49vw, 98vw" attrs='loading="lazy" decoding="async" data-reveal' -%}
+      {%- else -%}
+        <span class="ph-label">{{ cap | default: "image / video" }}</span>
+      {%- endif -%}
+    </div>
+    {%- if cap and src or cap and vid -%}<figcaption>{{ cap }}</figcaption>{%- endif -%}
+  </figure>
+  {%- endfor -%}
+{%- if shared -%}
+  </div>
+  <figcaption>{{ shared }}</figcaption>
+</figure>
+{%- else -%}
+</div>
+{%- endif -%}

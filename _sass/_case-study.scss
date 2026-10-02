@@ -1,0 +1,492 @@
+// =========================================================
+// Case study page
+// =========================================================
+
+// Vertical padding only: .wrap supplies the inline padding, so the title,
+// intro and facts share the nav's content edges.
+.case-head {
+  padding-block: var(--s-7) var(--s-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2-small);
+  margin: 0 0 var(--s-3);
+}
+
+.case-title { @include page-title; }
+
+.case-sub {
+  @include subtitle;             // 7 columns from md, matching the body text
+  margin: var(--s-3) 0 0;
+}
+
+// Role, Year, Status. Phones: Role and Year share a row, Status gets its own
+// row at the right. sm: one row, Status at the right. md up: the 12-column
+// grid, with Status at column 9 (column 10 from `wide`, lined up with the nav).
+.case-facts {
+  display: grid;
+  align-items: start;
+  margin: var(--s-5) 0 0;
+  font-size: var(--fs-sm);
+
+  div { display: grid; gap: 0.15rem; }
+
+  // Phones: one fact per row, the label and then its value 72px in from the
+  // grid edge, with rules between.
+  @include below('sm') {
+    div {
+      grid-template-columns: 4.5rem 1fr;
+      align-items: baseline;
+      gap: 0;
+      padding-block: var(--s-2);
+    }
+    div + div { border-top: 1px solid var(--ink-2); }
+  }
+
+  // Hanging status dot: it sits in the gap left of the value, so "Status" and
+  // the value keep the same left edge. Only live and retired/archived get one.
+  .status-value { position: relative; }
+  .status-value.is-live::before,
+  .status-value.is-retired::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    width: 0.5em;
+    height: 0.5em;
+    margin-right: 0.33333em;
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .status-value.is-live::before { background: var(--live); }
+  .status-value.is-retired::before { background: var(--retired); }
+  .status-value a { margin-left: 1px; }
+  dt {  font-size: var(--fs-xs); font-weight: 600; }
+  dd { margin: 0; font-weight: 500; line-height: var(--lh-tight); }
+  a { text-decoration: underline; text-underline-offset: 2px; }
+
+  @include respondto('sm') {
+    grid-template-columns: auto auto 1fr;
+    gap: var(--s-5);
+  }
+
+  @include respondto('md') {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+
+    > :nth-child(1) { grid-column: 1 / 3; }
+    > :nth-child(2) { grid-column: 3 / 9; }
+    > .status { grid-column: 9 / -1; justify-self: start; }
+  }
+
+  @include respondto('wide') {
+    > :nth-child(2) { grid-column: 3 / 10; }
+    > .status { grid-column: 10 / -1; }
+  }
+}
+
+// Hero opener (no mat), between header and body. Fixed proportions at every
+// width (16:9 unless a case study sets hero_aspect, e.g. "3.2 / 1"): full
+// bleed until 1600px, then it stops growing, centers, and takes the card
+// corners. No max-height, which would change the proportions on short windows.
+// Outer figure: holds the hero box and its optional caption.
+.case-hero-figure {
+  margin: 0 0 var(--s-4);
+}
+
+.case-hero {
+  width: 100%;
+  max-width: 100rem;              // 1600px
+  margin: 0 auto;
+  // Mobile first: hero_aspect_mobile below sm, hero_aspect from sm up.
+  aspect-ratio: var(--hero-aspect-mobile, var(--hero-aspect, 16 / 9));
+  overflow: hidden;
+  position: relative;
+
+  // The picture (poster) and the video stack in the same box.
+  > picture,
+  > video {
+    position: absolute;
+    inset: 0;
+  }
+
+  img,
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @include respondto('sm') {
+    aspect-ratio: var(--hero-aspect, 16 / 9);
+  }
+
+  @include respondto('lg') {
+    border-radius: var(--radius-card);
+  }
+}
+
+
+// Body copy sits on a 12-column grid (same gutter as the site grid). Blocks
+// stay in normal flow so vertical margins still collapse; column edges are
+// computed from the container width instead of using display: grid.
+.case-body {
+  --body-cols: 12;
+  --body-col: calc((100% - (var(--body-cols) - 1) * var(--grid-gap)) / var(--body-cols));
+
+  --body-pad-block: var(--s-5);   // also sets the Scope sidebar's top
+
+  padding-block: var(--body-pad-block);
+
+  @include respondto('md') { position: relative; }   // anchors the Scope sidebar
+
+  > p,
+  > h1, > h2,  > h3, > h4, > h5, > h6,
+  > .stats {
+    max-width: var(--measure);
+    margin-inline: 0;
+
+    // Columns 1–7, on the grid's left edge. The subtitle matches (.case-sub).
+    @include respondto('md') {
+      max-width: none;
+      width: calc(7 * var(--body-col) + 6 * var(--grid-gap));
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  // The stats keep the block their numbers were sized on (6 columns and a
+  // gutter): the figures scale with its width, so widening it with the text
+  // would enlarge them too.
+  > .stats {
+    @include respondto('md') { width: calc(6 * var(--body-col) + 6 * var(--grid-gap)); }
+  }
+
+  > p { margin-block: 0 var(--s-5); }
+  > p:has(+ p) { margin-bottom: var(--s-2); }   // paragraph to paragraph; subheads and other blocks keep --s-5
+  > h1, > h2, > h3, > h4, > h5, > h6 {
+    margin-block: 0 var(--s-2);
+  }
+}
+
+// Media (full, duo, quad, video) breaks out of the content grid: the window
+// less half a grid gutter on each side (the same gap as between media items),
+// capped with the hero at 1600px. Captions
+// stay on the content grid, level with the wordmark. The article is a size
+// container so 100cqw is the page width without a scrollbar (unlike 100vw).
+// The widths are set on .case rather than .case-body so the More work list
+// below the body can draw its rule at the media width too.
+.case {
+  container-type: inline-size;
+
+  --media-w: calc(min(100cqw, 100rem) - 2 * var(--media-gap));
+  // How far the media reaches past the content edge on each side.
+  --media-inset: calc((var(--media-w) - min(100cqw, var(--wrap)) + 2 * var(--wrap-pad)) / 2);
+}
+
+.case-body > .media,
+.case-body > .tweets {
+  width: var(--media-w);
+  max-width: none;
+  margin-inline: calc((100% - var(--media-w)) / 2);
+}
+
+// The slider starts on the content grid, level with the wordmark and the cards
+// at the foot of the page, and runs off the right of the window so the next
+// slide is cropped by the viewport edge. Its gap stays one grid gutter.
+.case-body > .slider {
+  // Distance from the content grid out to the window edge.
+  --slider-inset: calc(var(--media-inset) + var(--media-gap));
+
+  width: auto;
+  max-width: none;
+  margin-inline: calc(-1 * var(--slider-inset));   // full bleed: the window crops the slides
+
+  // The arrows start on the same column as the nav, the Scope sidebar and the
+  // services in the list below: column 9 from md, column 10 from wide. Below
+  // that those columns don't exist, so they sit on the content's left edge.
+  > .slider-nav {
+    --nav-col: calc((100% - 2 * var(--slider-inset) - 11 * var(--grid-gap)) / 12);
+
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-left: var(--slider-inset);
+
+    @include respondto('md') {
+      padding-left: calc(var(--slider-inset) + 8 * (var(--nav-col) + var(--grid-gap)));
+    }
+
+    @include respondto('wide') {
+      padding-left: calc(var(--slider-inset) + 9 * (var(--nav-col) + var(--grid-gap)));
+    }
+  }
+}
+
+// The mosaic runs wider than the rest of the media: the gap left outside it is
+// the same hairline it uses between its own tiles, at every width. Like the
+// hero, it stops growing at 1600px and centres from there.
+.case-body > .mosaic {
+  --mosaic-w: min(calc(100cqw - 2 * var(--mosaic-gap)), 100rem);
+
+  width: var(--mosaic-w);
+  max-width: none;
+  margin-inline: calc((100% - var(--mosaic-w)) / 2);
+}
+
+// A section rule: as wide as the media, hung off the heading's left edge (the
+// content edge) by the media inset, with the heading beneath it.
+@mixin section-rule {
+  content: "";
+  display: block;
+  width: var(--media-w);
+  margin-left: calc(-1 * var(--media-inset));
+  margin-bottom: var(--s-4);
+  border-top: 1px solid var(--ink-2);
+}
+
+// From the result on, each section opens with one. The first stats or media
+// block is where the result starts, so the intro and the challenge above it
+// stay unruled.
+.case-body > :is(.stats, .media) ~ :is(h2, h3)::before { @include section-rule; }
+
+.case-body > .media figcaption { padding-inline: var(--media-inset); }
+
+// Side by side (sm up), a caption keeps the inset only on its outer side. The
+// pair is split by half a gutter, so a right-hand caption steps in by the other
+// quarter to start on the content grid (column 7).
+@include respondto('sm') {
+  .case-body > .media > figure:nth-child(odd) figcaption { padding-right: 0; }
+  .case-body > .media > figure:nth-child(even) figcaption {
+    padding-left: calc((var(--grid-gap) - var(--media-gap)) / 2);
+  }
+}
+
+// Four across (md up): only the outermost captions keep an inset, so the
+// middle two sit flush against their own images.
+@include respondto('md') {
+  .case-body > .media-quad > figure:nth-child(n) figcaption { padding-inline: 0; }
+  .case-body > .media-quad > figure:first-child figcaption { padding-left: var(--media-inset); }
+  .case-body > .media-quad > figure:last-child figcaption { padding-right: var(--media-inset); }
+}
+
+
+
+// Scope (_includes/scope.html), in the nav's type size. Below md it sits in
+// the text column wherever the case study places it. From md up it's a sidebar
+// in columns 10–12, out of the flow and level with the top of the body text.
+.scope {
+  font-size: var(--fs-sm);        // same as the nav
+
+  h2, h3 { font-size: inherit; }
+  h2 { margin-block: 5px var(--s-2); }
+  h3 { margin-top: var(--s-2); }
+  p { font-size: inherit; margin-block: 0 var(--s-4); }
+
+  // Below md: a "Project details" row between rules that opens the groups
+  // and team beneath it. From md up the sidebar is always open (see
+  // project-details.js), so the summary goes.
+  .scope-details {
+    border-block: 1px solid var(--ink-2);
+
+    &[open] { padding-bottom: var(--s-2); }
+
+    @include respondto('md') { border: 0; padding: 0; }
+  }
+
+  .scope-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 2.75rem;          // 44px touch target
+    padding-right: var(--s-1);    // the sign sits in from the rules' ends
+    @include text-ui;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker { display: none; }
+
+    // A plus that turns into a minus when open.
+    &::after {
+      content: "";
+      width: 0.75rem;
+      height: 0.75rem;
+      background:
+        linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+        linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+    }
+
+    @include respondto('md') { display: none; }
+  }
+
+  .scope-details[open] > .scope-summary::after {
+    background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat;
+  }
+
+  // Team: one name per line, a section apart from the scope groups above.
+  .scope-team-heading { margin-top: var(--s-5); }
+  .scope-team {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: var(--lh-body);
+  }
+}
+
+.case-body > .scope {
+  max-width: var(--measure);
+  margin: 0 auto var(--s-5);        // below md, room before the heading that follows
+
+  // Absolute positioning measures against the body's padding box, so the
+  // column width takes the .wrap padding (--wrap-pad each side) off first.
+  @include respondto('md') {
+    --scope-col: calc((100% - 2 * var(--wrap-pad) - 11 * var(--grid-gap)) / 12);
+
+    position: absolute;
+    top: var(--body-pad-block);
+    right: var(--wrap-pad);
+    width: calc(3 * var(--scope-col) + 2 * var(--grid-gap));
+    max-width: none;
+    margin: 0;
+  }
+}
+
+// More work: the other case studies as a list of rows, separated by rules in
+// the manner of the notes index. Thumbnail on the left, title and scope beside
+// it. Below sm the scope sits under the title; from sm up they share a row.
+.case-next {
+  padding-block: var(--s-5) 0;
+}
+
+// Subhead in the nav's type, sitting on the grid's left edge like the rows
+// below it.
+.case-next-title {
+  @include text-ui;
+  margin: 0 0 var(--s-3);
+
+  // Opens with the same rule as the sections above it.
+  &::before { @include section-rule; }
+}
+
+.more-work {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li { border-top: 1px solid var(--line); }
+}
+
+.more-row {
+  --row-col: calc((100% - 11 * var(--grid-gap)) / 12);
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--s-4);
+  padding-block: var(--s-3);
+  position: relative;             // for the title link's stretched ::after
+
+  &:hover .more-row-title { text-decoration: underline; }
+
+  // The ring goes round the whole row, which the link covers.
+  &:has(.more-row-title:focus-visible) {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  // From md the thumbnail, title and scope are all items of this row, so the
+  // scope can be sized to the columns the nav starts on: column 9 here, column
+  // 10 from wide. Its width is what's left from that line, which puts its left
+  // edge exactly on it.
+  @include respondto('md') {
+    grid-template-columns: auto 1fr calc(4 * var(--row-col) + 3 * var(--grid-gap));
+
+    // Fill the track rather than hugging the text, so every row's scope starts
+    // on the same line.
+    .more-row-scope { justify-self: stretch; }
+  }
+
+  @include respondto('wide') {
+    grid-template-columns: auto 1fr calc(3 * var(--row-col) + 2 * var(--grid-gap));
+  }
+}
+
+.more-row-media {
+  width: 6rem;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--ph-bg);
+  position: relative;             // anchors a video's pause button
+
+  @include respondto('sm') { width: 8rem; }
+
+  // A smaller pause button for the thumbnail, still a 24px target, above the
+  // stretched link and shown whenever the row is hovered.
+  .video-toggle {
+    z-index: 2;
+    right: 6px;
+    bottom: 6px;
+    width: 1.5rem;
+    height: 1.5rem;
+
+    svg { width: 0.625rem; height: 0.625rem; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .more-row:hover & .video-toggle { opacity: 1; }
+  }
+
+  img,
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+// Title in the notes index's type, with the scope under it on phones and
+// alongside it once there's room.
+.more-row-text {
+  display: grid;
+  gap: 0.15rem;
+
+  @include respondto('sm') {
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: var(--s-4);
+  }
+
+  // From md the title and scope sit directly on the row's grid, so the scope
+  // can be placed against the page's columns rather than this wrapper's.
+  @include respondto('md') { display: contents; }
+}
+
+.more-row-title {
+  font-size: var(--fs-md);        // the Notes list's titles
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  color: inherit;
+  text-decoration: none;
+
+  // Stretched over the row, so a click anywhere on it follows the link.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  &:focus-visible { outline: none; }
+}
+
+.more-row-scope {
+  @include text-caption;
+  color: var(--ink-2-small);
+}

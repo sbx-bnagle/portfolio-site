@@ -1,0 +1,76 @@
+{%- comment -%}
+  A quoted post or article as real text rather than a screenshot, so it scales
+  with the reader's font size, can be selected and searched, and reads properly
+  in a screen reader.
+  Params:
+    author      the account or publication doing the talking
+    author_url  links the name
+    handle      @name for a post, or the writer's byline for an article
+    handle_url  links the handle; falls back to author_url
+    avatar      image under /assets/img/, shown left of the name
+    url         links the name when no author_url is given
+    text        the quote itself (markup allowed)
+    src + alt   an image the post carried
+  The card shows the quote and its source; dates are not displayed.
+  Wrap two or three in <div class="tweets"> ... </div> to sit them side by side.
+  Usage: {% include tweet.html author="Zap Energy" handle="@Energy_Zap"
+          author_url="https://x.com/Energy_Zap" avatar="few/icon/zap.jpg"
+          text="..." %}
+{%- endcomment -%}
+{%- assign name_link = include.author_url | default: include.url -%}
+{%- assign handle_link = include.handle_url | default: name_link -%}
+{%- comment -%}
+  Link the @mentions inside the quote. Trailing punctuation stays outside the
+  link, so "@PPPLab." links the account and keeps the full stop as text.
+  mention_base overrides where they point.
+{%- endcomment -%}
+{%- assign mention_base = include.mention_base | default: "https://x.com/" -%}
+{%- assign quote = "" -%}
+{%- assign words = include.text | split: " " -%}
+{%- for word in words -%}
+  {%- assign lead = word | slice: 0, 1 -%}
+  {%- if lead == "@" and word.size > 1 -%}
+    {%- assign handle = word -%}
+    {%- assign trailing = "" -%}
+    {%- assign tail = word | slice: -1 -%}
+    {%- if ".,!?:;" contains tail -%}
+      {%- assign cut = word.size | minus: 1 -%}
+      {%- assign handle = word | slice: 0, cut -%}
+      {%- assign trailing = tail -%}
+    {%- endif -%}
+    {%- assign account = handle | remove_first: "@" -%}
+    {%- capture piece -%}<a href="{{ mention_base }}{{ account }}">{{ handle }}</a>{{ trailing }}{%- endcapture -%}
+  {%- else -%}
+    {%- capture piece -%}{{ word }}{%- endcapture -%}
+  {%- endif -%}
+  {%- assign quote = quote | append: piece -%}
+  {%- unless forloop.last -%}{%- assign quote = quote | append: " " -%}{%- endunless -%}
+{%- endfor -%}
+<figure class="tweet-card">
+  <blockquote class="tweet-quote"{% if include.url %} cite="{{ include.url }}"{% endif %}>
+    <p class="tweet-text">{{ quote }}</p>
+  </blockquote>
+  {%- if include.src %}
+  {%- assign tweet_img = '/assets/img/' | append: include.src | replace: '//', '/' -%}
+  {%- include picture.html path=tweet_img alt=include.alt class="tweet-media" sizes="min(22rem, 70vw)" attrs='loading="lazy" decoding="async"' -%}
+  {%- endif %}
+  <figcaption class="tweet-meta">
+    <span class="tweet-source">
+      {%- if include.avatar -%}
+      {%- assign avatar = include.avatar -%}
+      {%- assign lead = avatar | slice: 0, 1 -%}
+      {%- if lead == '/' -%}{%- assign avatar = avatar | slice: 1, 999 -%}{%- endif -%}
+      {%- assign tweet_avatar = '/assets/img/' | append: avatar | replace: '//', '/' -%}
+      {%- include picture.html path=tweet_avatar alt="" class="tweet-avatar" sizes="2.375rem" attrs='loading="lazy" decoding="async"' -%}
+      {%- endif -%}
+      {%- if include.author_url -%}
+      <a class="tweet-author" href="{{ include.author_url }}">{{ include.author }}</a>
+      {%- else -%}
+      <span class="tweet-author">{{ include.author }}</span>
+      {%- endif -%}
+    </span>
+    {%- if include.handle %}
+    {% if handle_link %}<a class="tweet-handle" href="{{ handle_link }}">{{ include.handle }}</a>{% else %}<span class="tweet-handle">{{ include.handle }}</span>{% endif %}
+    {%- endif %}
+  </figcaption>
+</figure>

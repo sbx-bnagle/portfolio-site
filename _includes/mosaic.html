@@ -1,0 +1,14 @@
+{%- comment -%}
+  The photo mosaic from nanograv.org: five tiles on a six-column grid, laid out
+  in the proportions the live site uses. The bottom-right tile is held to 75%
+  of its cell, pinned to the cell's top and right edges, so the open ground
+  falls away to its left and below. No caption. Each image sits in a tile
+  span, which holds the grid placement and the grey block it fades in over.
+{%- endcomment -%}
+<figure class="media mosaic">
+  <span class="mosaic-a">{% include picture.html path="/assets/img/nanograv/mosaic/VLA.jpg" alt="A radio telescope dish on its mount, tilted against a plain sky, in black and white." sizes="(min-width: 38rem) 17vw, 50vw" attrs='loading="lazy" decoding="async" data-reveal' %}</span>
+  <span class="mosaic-b">{% include picture.html path="/assets/img/nanograv/mosaic/CHIME.jpg" alt="The CHIME telescope's long half-pipe reflectors under a deep blue twilight sky, the moon above them." sizes="(min-width: 38rem) 17vw, 50vw" attrs='loading="lazy" decoding="async" data-reveal' %}</span>
+  <span class="mosaic-c">{% include picture.html path="/assets/img/nanograv/mosaic/work.jpg" alt="Collaboration members around a table of laptops, mid-conversation, the NANOGrav dot pattern on the wall behind them." sizes="(min-width: 38rem) 34vw, 50vw" attrs='loading="lazy" decoding="async" data-reveal' %}</span>
+  <span class="mosaic-d">{% include picture.html path="/assets/img/nanograv/mosaic/group.jpg" alt="About thirty-five members of the NANOGrav collaboration gathered on outdoor steps for a group photograph." sizes="(min-width: 38rem) 50vw, 100vw" attrs='loading="lazy" decoding="async" data-reveal' %}</span>
+  <span class="mosaic-e">{% include picture.html path="/assets/img/nanograv/mosaic/greenbank.jpg" alt="The Green Bank Telescope on a distant ridge at sunset, wildflowers in the foreground against a violet sky." sizes="(min-width: 38rem) 25vw, 50vw" attrs='loading="lazy" decoding="async" data-reveal' %}</span>
+</figure>

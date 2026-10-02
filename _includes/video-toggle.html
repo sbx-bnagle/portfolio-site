@@ -1,0 +1,9 @@
+{%- comment -%}
+  Pause/play button for an auto-playing, looping video (WCAG 2.2.2). Place it
+  right after the <video>, inside a positioned wrapper. Hidden until
+  transitions.js takes over playback, since it does nothing without JS.
+{%- endcomment -%}
+<button class="video-toggle is-paused" type="button" aria-label="Play animation" hidden>
+  <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="3.5" y="2.5" width="3" height="11" rx="0.75" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" rx="0.75" fill="currentColor"/></svg>
+  <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3.1v9.8a.6.6 0 0 0 .92.5l7.6-4.9a.6.6 0 0 0 0-1l-7.6-4.9A.6.6 0 0 0 5 3.1Z" fill="currentColor"/></svg>
+</button>

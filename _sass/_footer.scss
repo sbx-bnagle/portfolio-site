@@ -1,0 +1,45 @@
+// =========================================================
+// Footer
+// =========================================================
+
+.site-foot {
+  border-top: 1px solid var(--line);
+  // Held at the height it had with a single line of contact (the padding,
+  // one 28.8px line and the rule), with the two stacked links centred in it.
+  display: grid;
+  align-content: center;
+  box-sizing: border-box;
+  height: calc(2 * var(--s-5) + 1.8rem + 1px);
+
+  // The light pages rule in ink; on Notes it also matches the list of notes.
+  :is(.page-notes, .page-home, .page-case) & { border-top-color: var(--ink); }
+}
+
+.foot-inner {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-4);
+}
+
+.foot-contact {
+  margin: 0;
+  display: grid;
+  justify-items: start;           // each link's hit area stays its text
+  line-height: var(--lh-body);
+
+  a {
+    font-size: var(--fs-base);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.foot-meta {
+  color: var(--ink-2-small);
+  font-size: var(--fs-sm);
+  margin: 0;
+}

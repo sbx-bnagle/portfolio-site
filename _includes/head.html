@@ -1,0 +1,52 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+  {%- if page.title and page.url != "/" -%}
+    {{ page.title | replace: '<br>', ' ' }} · {{ site.title }}
+  {%- else -%}
+    {{ site.title }} — {{ site.tagline }}
+  {%- endif -%}
+</title>
+<meta name="description" content="{{ page.blurb | default: site.description }}">
+{%- unless page.url == "/404.html" %}
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+{%- endunless %}
+
+<!-- Icons (made by npm run social). The SVG for current browsers, the .ico
+     for the rest, and the touch icon for iOS home screens. -->
+<link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="32x32">
+<link rel="icon" href="{{ '/assets/img/favicon.svg' | relative_url }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | relative_url }}">
+<link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
+
+<!-- Sharing previews (Open Graph, read by LinkedIn, Slack, iMessage and X).
+     A case study uses the crop of its card image; every other page uses the
+     default. A page can set og_image and og_alt in its front matter. -->
+{%- assign share_title = page.title | replace: '<br>', ' ' -%}
+{%- if page.url == "/" or share_title == "" -%}{%- assign share_title = site.title | append: " · " | append: site.tagline -%}{%- endif -%}
+{%- if page.collection == "case_studies" -%}
+  {%- assign share_image = '/assets/img/og/' | append: page.slug | append: '.jpg' -%}
+{%- endif -%}
+{%- assign share_image = page.og_image | default: share_image | default: '/assets/img/default.png' -%}
+{%- assign share_alt = page.og_alt | default: site.og_alt %}
+<meta property="og:type" content="{% if page.collection == 'case_studies' or page.collection == 'notes' %}article{% else %}website{% endif %}">
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="{{ share_title | escape }}">
+<meta property="og:description" content="{{ page.blurb | default: site.description | strip | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:image" content="{{ share_image | absolute_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ share_alt | escape }}">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- DM Sans is self-hosted (_sass/_fonts.scss). Fetch the file nearly every
+     page's text uses alongside the stylesheet, rather than after it. -->
+<link rel="preload" href="{{ '/assets/fonts/dm-sans-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+
+<!-- ?v= changes with every build, so hosts can cache CSS and JS for a long
+     time and a new deploy still reaches everyone straight away. -->
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<!-- Lets the CSS hide late-loading media until the script can fade it in. -->
+<script>document.documentElement.classList.add('js')</script>

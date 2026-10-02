@@ -1,0 +1,54 @@
+# Builds the site with Jekyll 4 and publishes it to GitHub Pages on every push
+# to main. GitHub's built-in Pages build runs an older Jekyll and Sass that
+# can't compile these stylesheets, so the repository's Pages source must be
+# set to "GitHub Actions" (Settings → Pages → Build and deployment).
+#
+# The JS bundle, responsive images, video copies and sharing images are
+# committed, so this only runs Jekyll. Rebuild those locally (npm run
+# build:js, npm run media, npm run social) before pushing changes to them.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer push doesn't cancel one already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      JEKYLL_ENV: production
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - id: pages
+        uses: actions/configure-pages@v6
+      - run: bundle exec jekyll build
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

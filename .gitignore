@@ -1,0 +1,17 @@
+# Build output and caches
+_site/
+.jekyll-cache/
+.sass-cache/
+node_modules/
+.DS_Store
+
+# Full-size masters of images that were resized for the site (kept on disk)
+_originals/
+
+# Large source files the pages don't use (kept on disk, not versioned)
+assets/img/few/SC.mp4
+assets/img/ALCF/source.mp4
+assets/img/ALCF/sr.png
+assets/img/ALCF/kR-rZvJaExt2-Uk23grZr_yFa7fN7p.png
+assets/img/ALCF/ooqnylgHDGcK0SjnYdLe5_WertkBCR.png
+assets/img/ALCF/_V4wXxR4pcwyt7EdAkuTD_jxle2QWZ.png

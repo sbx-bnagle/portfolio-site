@@ -1,0 +1,227 @@
+// =========================================================
+// Content block: interactive fusion map (_includes/fusion-map.html)
+// assets/js/fusion-map.js builds the map, its filters and details popups; the
+// fallback image covers the map until it has loaded. Filter and popup type and
+// colors come from the usfusionenergy.org map. Below md the filters sit under
+// the map; from md up they float over its top-left corner.
+// =========================================================
+
+// Phones: no map. Hidden, it never nears the viewport, so fusion-map.js never
+// loads Mapbox or the fallback image; if the window widens past sm it starts
+// as usual. The media before it then takes the room it would leave before text.
+.media-map {
+  @include below('sm') { display: none; }
+}
+
+.media:has(+ .media-map + :is(p, h1, h2, h3, h4, h5, h6, ul, ol)) {
+  @include below('sm') { margin-bottom: var(--s-7); }
+}
+
+// The original map's typeface. fusion-map.js loads Arimo along with Mapbox GL.
+$map-font: Arimo, Arial, Helvetica, sans-serif;
+
+.fusion-map {
+  position: relative;             // anchors the floating filters
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;               // clips the filters to the corners
+  // The map is a WebGL canvas, which some browsers don't clip to rounded
+  // corners through overflow alone; a clip path does it everywhere.
+  clip-path: inset(0 round var(--radius-card));
+  background: var(--case-tint, var(--paper-2));
+
+  &.is-borderless { border: 0; }   // border=false on the include
+}
+
+// U.S. Fusion Energy logo, placed as on the original map.
+.fusion-map-brand {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;                     // over the map, under the fallback
+  width: 88px;
+  height: auto;
+  pointer-events: none;           // points underneath stay clickable
+}
+
+.fusion-map-view {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+
+  @include respondto('sm') { aspect-ratio: 2 / 1; }
+}
+
+.fusion-map-canvas,
+.fusion-map-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fusion-map-fallback {
+  z-index: 3;                     // over the map and its controls until it's ready
+  object-fit: cover;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+
+  .is-ready & {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.fusion-map-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--s-2) var(--s-4);
+  padding: var(--s-3);
+  background: #420e40;
+  color: #f8d4d6;
+  font-family: $map-font;
+  font-size: 0.875rem;
+
+  &[hidden] { display: none; }
+
+  @include respondto('md') {
+    position: absolute;
+    top: var(--s-3);
+    left: var(--s-3);
+    z-index: 2;                   // level with the map's own controls
+    grid-template-columns: none;
+    width: 13rem;
+    border-radius: 6px;
+  }
+}
+
+// On/off switch: a pill whose knob slides right and takes the type's color.
+.fusion-map-filter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--s-2);
+  cursor: pointer;
+
+  &:has(input:disabled) { cursor: default; }
+
+  input {
+    appearance: none;
+    position: relative;
+    box-sizing: content-box;
+    width: 2rem;
+    height: 1rem;
+    margin: 0;
+    border: 2px solid currentColor;
+    border-radius: 1rem;
+    color: #7b1a79;
+    cursor: inherit;
+    transition: color 0.15s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0.15rem;
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: currentColor;
+      transform: translateY(-50%);
+      transition: left 0.15s ease;
+    }
+
+    &:checked { color: var(--type-color); }
+    &:checked::before { left: 1.15rem; }
+    &:focus-visible { outline: 2px solid #f8d4d6; outline-offset: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      &, &::before { transition: none; }
+    }
+  }
+}
+
+// Mapbox's own stylesheet loads after this one, so these rules are scoped
+// under the popup's class to win.
+.fusion-map-popup {
+  .mapboxgl-popup-content {
+    padding: var(--s-2) var(--s-3) var(--s-3);
+    border-radius: 6px;
+    font-family: $map-font;
+    color: #707070;
+  }
+
+  p {
+    margin: var(--s-1) 0 0;
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  .fusion-map-popup-type {
+    margin: 0;
+    padding-bottom: var(--s-1);
+    border-bottom: 3px solid #d4d4d4;
+    font-size: 0.8125rem;
+  }
+
+  .fusion-map-popup-name {
+    margin-top: var(--s-2);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  a {
+    color: #7c036f;
+    text-decoration: none;
+
+    &:hover {
+      color: #d70252;
+      text-decoration: underline;
+    }
+  }
+}
+
+
+// Keyboard stand-ins for the drawn points and clusters (keyboardPoints() in
+// fusion-map.js): invisible, and out of the way of the mouse, until focused.
+.fusion-map-point {
+  width: var(--size, 24px);
+  height: var(--size, 24px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+
+  &:focus-visible {
+    border-radius: 50%;           // keeps the ring round over the base focus style
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--paper);
+  }
+}
+
+// The keys for the points, shown while one has keyboard focus (or its details
+// do), so it's clear the arrow keys reach the rest. Screen readers get the
+// same help from the map's description instead.
+.fusion-map-keys {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 2;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.75rem;
+  width: max-content;
+  max-width: calc(100% - 24px);   // wraps on a narrow map rather than overflowing
+  text-align: center;
+  pointer-events: none;
+  display: none;
+
+  .fusion-map-view:has(.fusion-map-point:focus-visible, .mapboxgl-popup :focus-visible) & { display: block; }
+}

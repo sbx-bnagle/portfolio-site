@@ -1,0 +1,7 @@
+{%- comment -%}
+  Small print under a section's paragraphs: credits for the work shown below,
+  or a short note about it. Same size as a media caption, but in --ink and
+  upright. Params: text (HTML allowed).
+  {% include small-print.html text="Illustration: <a href='…'>Name</a>" %}
+{%- endcomment -%}
+<p class="small-print">{{ include.text }}</p>

@@ -1,0 +1,50 @@
+{%- comment -%}
+  Stacked sticky case-study cards.
+  Order is controlled by site.case_study_order in _config.yml.
+  Each card carries the pre-jump context: role, year, disciplines, status.
+  Only the title is a link, so an animated card image can carry its own pause
+  button (a button can't sit inside a link). The link still covers the whole
+  card for the pointer: its ::after is stretched over it (_cards.scss). The
+  text comes before the image in the markup, so keyboard and screen reader
+  order is title, then the image and its button; CSS draws the image first.
+{%- endcomment -%}
+
+
+<section id="work" class="cards" aria-labelledby="work-heading">
+  <h2 id="work-heading" class="visually-hidden">Selected work</h2>
+  {%- for slug in site.case_study_order -%}
+    {%- assign cs = site.case_studies | where_exp: "d", "d.url contains slug" | first -%}
+    {%- if cs -%}
+    <article class="card" style="--i: {{ forloop.index0 }}">
+        <div class="card-body">
+          <!-- <div class="card-meta">
+            <span class="card-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span> 
+            {%- if cs.disciplines -%}
+            <span class="card-tags">{{ cs.disciplines | join: " · " }}</span>
+            {%- endif -%}
+          </div> -->
+          <h3 class="card-title"><a class="card-link" href="{{ cs.url | relative_url }}">{{ cs.title }}</a></h3>
+          <p class="card-blurb">{{ cs.blurb }}</p>
+          <div class="card-foot">
+            <span class="card-role">{{ cs.role }}</span>
+            <!-- <span class="card-year">{{ cs.year }}</span> -->
+            <!-- <span class="card-status {% if cs.status == 'Live' %}is-live{% endif %}">{{ cs.status }}</span> -->
+            <span class="card-cta" aria-hidden="true">View case study &rarr;</span>
+          </div>
+        </div>
+        <div class="card-media" style="--aspect: {{ cs.card_aspect | default: '16:9' | replace: ':', ' / ' }}">
+          <span class="ph-label">
+            {%- comment -%} An image card goes through picture.html for its small copies; the title names the link, so alt="". {%- endcomment -%}
+            {%- if cs.card_media contains "<img" -%}
+            {%- assign card_src = cs.card_media | split: "src='" | last | split: "'" | first -%}
+            {%- include picture.html path=card_src alt="" sizes="(min-width: 60rem) 48vw, 92vw" -%}
+            {%- else -%}
+            {{ cs.card_media | default: "image / video" }}
+            {%- if cs.card_media contains "<video" -%}{%- include video-toggle.html -%}{%- endif -%}
+            {%- endif -%}
+          </span>
+        </div>
+    </article>
+    {%- endif -%}
+  {%- endfor -%}
+</section>

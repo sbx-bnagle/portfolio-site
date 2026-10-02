@@ -1,0 +1,15 @@
+// =========================================================
+// 8-column layout grid
+// The structural backbone for major page blocks (hero, about
+// intro, client grid). Place children with `grid-column`.
+// Smaller components (media duo/quad, stats) keep their own
+// local grids.
+// =========================================================
+
+@mixin grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.grid { @include grid; }

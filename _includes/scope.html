@@ -1,0 +1,51 @@
+{%- comment -%}
+  Project scope and team, rendered from the case study's front matter.
+  scope: a list of groups, each a name and its services.
+    scope:
+    - strategy:
+        - "brand strategy"
+        - "content strategy"
+  team: names separated by commas (links allowed), or a YAML list. Empty
+  entries are skipped.
+    team: "Brad Nagle, <a href='https://example.com/'>Name</a>"
+  Usage in a case study: {% include scope.html %}
+  Below md it's a collapsed "Project details" disclosure; from md up it's the
+  open sidebar with no summary. It renders open, and the script after it closes
+  it on a small screen before first paint; project-details.js keeps it in step
+  after Swup page views and viewport changes.
+{%- endcomment -%}
+{%- if page.scope or page.team -%}
+{%- assign team = page.team -%}
+{%- unless team.first -%}{%- assign team = page.team | split: "," -%}{%- endunless -%}
+<aside class="scope" aria-label="Scope and team">
+<details class="scope-details" open>
+  <summary class="scope-summary">Project details</summary>
+  {%- if page.scope %}
+  <h2 id="scope">Scope</h2>
+  <div class="scope-groups">
+    {%- for group in page.scope -%}
+    {%- for pair in group %}
+    <div class="scope-group">
+      <h3>—&ThinSpace;{{ pair[0] | capitalize }}</h3>
+      <p>{{ pair[1] | join: ", " | capitalize }}</p>
+    </div>
+    {%- endfor -%}
+    {%- endfor %}
+  </div>
+  {%- endif -%}
+  {%- if page.team %}
+  <h2 class="scope-team-heading">Team</h2>
+  <p>{{ page.team }}</p>
+  <!-- <ul class="scope-team">
+    {%- for member in team -%}
+    {%- assign name = member | strip -%}
+    {%- if name != "" %}
+    <li>{{ name }}</li>
+    {%- endif -%}
+    {%- endfor %}
+  </ul> -->
+  {%- endif %}
+</details>
+<script>matchMedia('(min-width: 60rem)').matches || document.currentScript.previousElementSibling.removeAttribute('open');</script>
+</aside>
+{%- endif -%}

@@ -1,0 +1,63 @@
+// =========================================================
+// Site header / nav
+// =========================================================
+
+.site-head {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper);
+  // backdrop-filter: saturate(1.1) blur(8px);
+  // border-bottom: 1px solid var(--line);
+}
+
+.nav {
+  height: var(--nav-h);
+  display: grid;
+  grid-template-columns: 1fr auto;  // below md: wordmark left, links right
+  align-items: center;
+  @include text-ui;
+
+  // md up: the 12-column grid (same gutter as the case study body); the links
+  // start at column 9, and at column 10 from `wide` up (below that the three
+  // links don't fit in columns 10–12), left-aligned.
+  @include respondto('md') {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+  }
+}
+
+.wordmark {
+  font-weight: 700;
+  text-decoration: none;
+  justify-self: start;              // keep the link area to the text
+
+  @include respondto('md') { grid-column: 1 / 9; }
+  @include respondto('wide') { grid-column: 1 / 10; }
+}
+
+.nav-links {
+  list-style: none;
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+
+  a {
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+    &.is-active {
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+  }
+
+  @include respondto('sm') {
+    gap: var(--s-5);
+  }
+
+  @include respondto('md') { grid-column: 9 / -1; }
+  @include respondto('wide') { grid-column: 10 / -1; }
+}

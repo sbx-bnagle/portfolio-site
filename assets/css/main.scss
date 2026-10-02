@@ -1,0 +1,27 @@
+---
+# Front matter required so Jekyll compiles this to /assets/css/main.css.
+# Partials live in _sass/ (see sass_dir in _config.yml).
+---
+
+// Foundations (define mixins/tokens before any component uses them)
+@import "breakpoints";   // $breakpoints map + respondto mixin
+@import "tokens";        // CSS custom properties
+@import "fonts";         // DM Sans @font-face rules (self-hosted)
+@import "grid";          // 8-column grid mixin + .grid
+@import "base";          // reset, document, type, shared utilities
+
+// Components
+@import "nav";
+@import "hero";
+@import "cards";
+@import "clients";
+@import "case-study";
+@import "media";
+@import "map";
+@import "tweet";
+@import "slider";
+@import "quote";
+@import "stats";
+@import "about";
+@import "notes";
+@import "footer";

@@ -1,0 +1,7 @@
+{%- comment -%}
+  width/height for an <img> or <video>, from _data/media.json (npm run
+  media:dims), so the page holds the right space before the file loads.
+  Param: path, the file's URL path ("/assets/img/ALCF/ar.jpg").
+{%- endcomment -%}
+{%- assign d = site.data.media[include.path] -%}
+{%- if d %} width="{{ d[0] }}" height="{{ d[1] }}"{% endif -%}

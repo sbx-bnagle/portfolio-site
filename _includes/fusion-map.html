@@ -1,0 +1,40 @@
+{%- comment -%}
+  Interactive map of U.S. fusion research sites, as built for usfusionenergy.org
+  (Mapbox GL, started by assets/js/fusion-map.js). The locations are a copy of
+  that site's data in /assets/data/fusion-locations.geojson.
+  Needs mapbox_token in _config.yml. Without one, the fallback image renders
+  like a media-full image. With one, the fallback covers the map box until the
+  map has loaded, and stays if it can't (no WebGL).
+  Params: fallback (image under /assets/img/), alt (for the fallback), caption,
+  border=false to leave off the hairline border.
+{%- endcomment -%}
+{%- assign fallback_src = '/assets/img/' | append: include.fallback | relative_url -%}
+{%- assign fallback_key = '/assets/img/' | append: include.fallback | replace: '//', '/' -%}
+{%- if include.border == false or include.border == "false" -%}
+  {%- assign borderless = " is-borderless" -%}
+{%- else -%}
+  {%- assign borderless = "" -%}
+{%- endif -%}
+<figure class="media media-full media-map">
+  {%- if site.mapbox_token and site.mapbox_token != "" -%}
+  <div class="fusion-map{{ borderless }}"
+       data-token="{{ site.mapbox_token }}"
+       data-src="{{ '/assets/data/fusion-locations.geojson' | relative_url }}">
+    <div class="fusion-map-view" role="region" aria-label="Interactive map of fusion research sites in the U.S." aria-describedby="fusion-map-help">
+      <p class="fusion-map-keys" aria-hidden="true">Arrow keys: next location · Enter: details · Esc: back · + / −: zoom</p>
+      <p class="visually-hidden" id="fusion-map-help">Tab to reach the locations, then use the arrow keys to move between them from left to right. Each location's details open as it takes focus; press Enter to move into them and Escape to return. Enter on a group of locations zooms in.</p>
+      <div class="fusion-map-canvas"></div>
+      <img class="fusion-map-brand" loading="lazy" decoding="async" src="{{ '/assets/img/USF/usfe.png' | relative_url }}"{% include media-attrs.html path='/assets/img/USF/usfe.png' %} alt="U.S. Fusion Energy">
+      {%- if include.fallback -%}
+      {%- include picture.html path=fallback_key alt=include.alt class="fusion-map-fallback" sizes="(min-width: 100rem) 1584px, 98vw" attrs='loading="lazy" decoding="async"' -%}
+      {%- endif -%}
+    </div>
+    <div class="fusion-map-filters" role="group" aria-label="Show locations by type" hidden></div>
+  </div>
+  {%- else -%}
+  <div class="media-frame{{ borderless }}">
+    {%- include picture.html path=fallback_key alt=include.alt sizes="(min-width: 100rem) 1584px, 98vw" attrs='loading="lazy" decoding="async"' -%}
+  </div>
+  {%- endif -%}
+  {%- if include.caption -%}<figcaption>{{ include.caption }}</figcaption>{%- endif -%}
+</figure>
