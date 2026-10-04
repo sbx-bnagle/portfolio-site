@@ -84,6 +84,11 @@ rebuild it before pushing changes to its sources:
 | Images or videos a page shows | `npm run media` |
 | `favicon.svg`, `favicon_512.png`, or a case study card image | `npm run social` |
 
+After building, the workflow runs `scripts/check-media.mjs`, which stops the
+deploy if a page shows an image or video that `npm run media` hasn't sized or
+made copies of, and lists each file and the page it's on. Run the same check
+locally with `npm run check:media` (after `jekyll build` or `jekyll serve`).
+
 GitHub Pages compresses text files, serves video with range requests, and runs
 behind a CDN. It doesn't allow custom cache headers: every file gets
 `Cache-Control: max-age=600` with an ETag, so after 10 minutes a returning

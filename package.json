@@ -13,7 +13,8 @@
     "images": "node scripts/responsive-images.mjs",
     "videos": "node scripts/video-variants.mjs",
     "media": "npm run -s media:dims && npm run -s images && npm run -s videos",
-    "social": "node scripts/social-images.mjs"
+    "social": "node scripts/social-images.mjs",
+    "check:media": "node scripts/check-media.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.1",

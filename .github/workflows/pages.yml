@@ -5,7 +5,8 @@
 #
 # The JS bundle, responsive images, video copies and sharing images are
 # committed, so this only runs Jekyll. Rebuild those locally (npm run
-# build:js, npm run media, npm run social) before pushing changes to them.
+# build:js, npm run media, npm run social) before pushing changes to them; a
+# check after the build stops the deploy if a page's media wasn't processed.
 name: Deploy to GitHub Pages
 
 on:
@@ -39,6 +40,9 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v6
       - run: bundle exec jekyll build
+      # Fails the deploy if a page shows media that npm run media hasn't
+      # sized and made copies of (scripts/check-media.mjs).
+      - run: node scripts/check-media.mjs
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
