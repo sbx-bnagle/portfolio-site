@@ -27,7 +27,7 @@
 {%- if page.collection == "case_studies" -%}
   {%- assign share_image = '/assets/img/og/' | append: page.slug | append: '.jpg' -%}
 {%- endif -%}
-{%- assign share_image = page.og_image | default: share_image | default: '/assets/img/default.png' -%}
+{%- assign share_image = page.og_image | default: share_image | default: '/assets/img/port.png' -%}
 {%- assign share_alt = page.og_alt | default: site.og_alt %}
 <meta property="og:type" content="{% if page.collection == 'case_studies' or page.collection == 'notes' %}article{% else %}website{% endif %}">
 <meta property="og:site_name" content="{{ site.title }}">

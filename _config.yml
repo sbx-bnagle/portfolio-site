@@ -8,8 +8,8 @@ description: >-
   build websites that are clear, accessible, and easy to maintain.
 url: "https://bradnagle.com"     # full links: canonical, sitemap, sharing previews
 baseurl: ""
-# Alt text for the default sharing image (assets/img/default.png).
-og_alt: "Brad Nagle smiling, beside a hand-drawn speech bubble that says “Hi!”"
+# Alt text for the default sharing image (assets/img/port.png).
+og_alt: "A dark folder icon with a soft blue glow, centered on an off-white background."
 
 # --- Build ---
 markdown: kramdown
