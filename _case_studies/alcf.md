@@ -40,7 +40,7 @@ card_aspect: "16:9"
 og_alt: "Cover of the ALCF 2019 science report: the word Science over a blue and pink scientific visualization, with the Argonne logo."
 ---
 
-The Argonne Leadership Computing Facility runs some of the world’s most powerful supercomputers built for open science. At Sandbox, our job is to make the facility clear to everyone it serves: the scientists who apply for time on the machines, the public who funds them, and the staff who keep it all running. We started with the reports in 2016 and grew into ALCF’s de facto in-house design team, usually with several projects under way at once. I lead design across print and online. I designed the site and built its live machine-status graphics, and I designed and implemented the system behind the user documentation, which the scientists write themselves. On strategy and UX, I work alongside Beth Cerny, ALCF’s communications lead.
+The Argonne Leadership Computing Facility runs some of the world’s most powerful supercomputers built for open science. At Sandbox, our job is to make the facility clear to everyone it serves: the scientists who apply for time on the machines, the public who funds them, and the staff who keep it all running. We started with the reports in 2016 and grew into ALCF’s de facto in-house design team, usually with several projects under way at once. I lead design across print and online and am the studio’s day-to-day contact with ALCF, and I direct a junior designer on the reports. I designed the site and built its live machine-status graphics, and I designed and implemented the system behind the user documentation, which the scientists write themselves. On strategy and UX, I work alongside Beth Cerny, ALCF’s communications lead.
 
 
 {% include scope.html %}
@@ -124,7 +124,7 @@ The home page shows a live status graphic for each of the four machines, Aurora,
 
 ## A system others can build on
 
-Much of what ALCF publishes is written by many hands, so we built the tools around the writers. The annual report and the user documentation both run on GitHub-based workflows. Contributors, including the scientists who write the docs, draft and revise in one place, and the design holds no matter who’s writing.
+Much of what ALCF publishes is written by many hands, so we built the tools around the writers. The annual report and the user documentation both run on GitHub-based workflows. Contributors, including the scientists who write the docs, draft and revise in one place, and the design holds no matter who’s writing. Accessibility is built into that system, so pages stay usable for every reader whoever writes them.
 
 The brand reaches past the main site, too. It’s packaged as a theme, and ALCF’s sub-organizations run their own sites on it, each with a home of its own that still reads as ALCF.
 

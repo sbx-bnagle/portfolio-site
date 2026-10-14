@@ -53,6 +53,7 @@ body_class: page-about
           <li>Static site generators</li>
           <li>WCAG compliance</li>
           <li>Building for maintainability</li>
+          <li>AI-assisted workflows</li>
         </ul>
       </div>
     </div>

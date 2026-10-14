@@ -86,7 +86,7 @@ recognition_slides:
 
 
 
-Fusion sits behind a wall of technical language. For most people the science is abstract and the institutions are unfamiliar, so there is no obvious place to start. People inside the field had the opposite problem: plenty of places to go, spread across national labs, universities, and private companies, but none they shared. U.S. Fusion Outreach needed a single public face that could explain fusion to a newcomer and still be a home for the community pushing it forward. At Sandbox, we developed their brand and website, and helped them launch Fusion Energy Week, an annual celebration that brings the community and the public together. I shaped the website’s information architecture and interface, and created the event’s identity and materials.
+Fusion sits behind a wall of technical language. For most people the science is abstract and the institutions are unfamiliar, so there is no obvious place to start. People inside the field had the opposite problem: plenty of places to go, spread across national labs, universities, and private companies, but none they shared. U.S. Fusion Outreach needed a single public face that could explain fusion to a newcomer and still be a home for the community pushing it forward. At Sandbox, we developed their brand and website, and helped them launch Fusion Energy Week, an annual celebration that brings the community and the public together. I was the day-to-day contact with U.S. Fusion Outreach. I shaped the website’s information architecture and interface, created the event’s identity and materials, and art-directed the project’s illustrators.
 
 
 

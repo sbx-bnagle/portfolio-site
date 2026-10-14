@@ -121,7 +121,7 @@ The release drove the report’s biggest month. In December 2023, as the recomme
 
 The report is long and technical: an executive summary, 8 chapters, a full list of recommendations, and an appendix. It serves two audiences at once: the agencies that fund the field, and the research community settling on its shared priorities. Readers arrive with different destinations in mind, so the site had to get each of them there quickly.
 
-The menu opens onto every chapter and every download in a single view. Search finds a term anywhere in the report and shows each match with its section heading and the sentences around it. The chapters run long, so choosing a result scrolls straight to the match, not the top of the page.
+The menu opens onto every chapter and every download in a single view. Search finds a term anywhere in the report and shows each match with its section heading and the sentences around it. The chapters run long, so choosing a result scrolls straight to the match, not the top of the page. It’s all built on accessible fundamentals: semantic structure, descriptive alt text, and a menu and search that work from the keyboard.
 
 Original illustration anchors the three science drivers the report is built around. The online edition mirrors the print report, and the downloads let readers work from the document directly.
 
