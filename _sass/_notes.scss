@@ -103,3 +103,28 @@
 
   a { color: var(--ink); text-decoration: none; }
 }
+
+// The unlisted /hello/ page: the Notes layout, with a short note around the
+// list and a one-line description under each project. The note follows the
+// subtitle more closely than the Notes list does.
+.hello-intro { margin-bottom: var(--s-5); }
+
+.hello-note {
+  max-width: var(--measure);
+  margin-bottom: var(--s-4);
+
+  p { margin: 0 0 var(--s-3); }
+}
+
+.hello-work { margin-bottom: var(--s-5); }
+
+.hello-blurb {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: var(--fs-base);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  color: var(--ink-2-small);
+}
+
+.hello-contact { padding-bottom: var(--s-6); }

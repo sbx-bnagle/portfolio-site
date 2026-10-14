@@ -1,0 +1,51 @@
+---
+layout: default
+title: Hello
+permalink: /hello/
+body_class: page-home
+# Unlisted: linked from introduction emails and mailers only. Kept out of the
+# nav highlight, the sitemap and search engines.
+nav_none: true
+sitemap: false
+noindex: true
+---
+<div class="notes-index wrap">
+  <section class="notes-intro hello-intro">
+    <h1 class="notes-lede">Hello</h1>
+    <p class="notes-sub">
+      Thanks for taking a look. I’m Brad Nagle, a senior designer and
+      strategist in Chicago.
+    </p>
+  </section>
+
+  <div class="hello-note">
+    <p>
+      For 15 years at Sandbox Studio, I’ve designed brands, publications, and
+      websites for national labs, universities, and scientific collaborations,
+      turning complex, technical work into something people want to read. I’m
+      looking for my next role, full-time or contract, and I’d love to bring
+      that range to a studio like yours.
+    </p>
+    <p>A few projects that show how I work:</p>
+  </div>
+
+  <ul class="notes-list hello-work">
+    {%- for slug in site.case_study_order -%}
+    {%- assign cs = site.case_studies | where_exp: "d", "d.url contains slug" | first -%}
+    {%- if cs %}
+    <li><a href="{{ cs.url | relative_url }}">{{ cs.title | replace: '<br>', ' ' }}<span class="hello-blurb">{{ cs.blurb }}</span></a></li>
+    {%- endif -%}
+    {%- endfor %}
+  </ul>
+
+  <div class="hello-note hello-contact">
+    <p>
+      The best way to reach me is
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>. You can also find
+      me on <a href="{{ site.linkedin }}">LinkedIn</a>, or
+      <a href="{{ '/assets/Brad-Nagle-Resume.pdf' | relative_url }}" download="Brad-Nagle-Resume.pdf">download my resume</a>
+      (PDF, 36 KB).
+    </p>
+    <p>Thanks for your time. I hope we get to talk.</p>
+  </div>
+</div>

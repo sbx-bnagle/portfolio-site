@@ -1,13 +1,13 @@
 {%- comment -%}
 Active section: case studies live under /work/, so the home link owns them.
-Notes covers both /notes/ and individual notes. The 404 page belongs to none.
+Notes covers both /notes/ and individual notes. The 404 page and unlisted pages (nav_none) belong to none.
 {%- endcomment -%}
 {%- assign nav_url = page.url | default: '/' -%}
 {%- if nav_url contains '/about' -%}
   {%- assign nav_section = 'about' -%}
 {%- elsif nav_url contains '/notes' -%}
   {%- assign nav_section = 'notes' -%}
-{%- elsif nav_url == '/404.html' -%}
+{%- elsif nav_url == '/404.html' or page.nav_none -%}
   {%- assign nav_section = 'none' -%}
 {%- else -%}
   {%- assign nav_section = 'work' -%}
